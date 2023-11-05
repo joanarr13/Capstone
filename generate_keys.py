@@ -6,7 +6,7 @@ import streamlit_authenticator as stauth
 
 name = ['Peter Parker', 'Rebecca Miller']
 usernames = ['pparker', 'rmiller']
-passwords = ['abc123', 'def456']
+passwords = ['XXX', 'XXX']
 
 hashed_passwords = stauth.Hasher(passwords).generate()
 
