@@ -31,7 +31,10 @@ with file_path.open('rb') as file:
     if authentication_status:
         
         
-        #codigo
+        st.header("Hello world!")
+
+        with st.sidebar:
+            st.title("Hello world from side bar")
 
 
         #precisamos de um sitio para o logout button
