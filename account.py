@@ -9,7 +9,7 @@ cred = credentials.Certificate("doc-it-right-d9605-e809d4f40dec.json")
 firebase_admin.initialize_app(cred)
 def app():
 # Usernm = []
-    st.title('Welcome to :violet[Pondering] :sunglasses:')
+    st.title('Welcome to :blue[Doc-IT-Right] :sunglasses:')
 
     if 'username' not in st.session_state:
         st.session_state.username = ''
