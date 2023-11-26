@@ -12,6 +12,7 @@ try:
 except ValueError:
     # Initialize the app if it hasn't been initialized yet
     firebase_admin.initialize_app(cred)
+
 def app():
 # Usernm = []
     st.title('Welcome to :blue[Doc-IT-Right] :sunglasses:')
@@ -20,7 +21,6 @@ def app():
         st.session_state.username = ''
     if 'useremail' not in st.session_state:
         st.session_state.useremail = ''
-
 
 
     def f(): 
@@ -47,15 +47,12 @@ def app():
 
 
         
-    
-        
     if "signedout"  not in st.session_state:
         st.session_state["signedout"] = False
     if 'signout' not in st.session_state:
         st.session_state['signout'] = False    
         
 
-        
     
     if  not st.session_state["signedout"]: # only show if the state is False, hence the button has never been clicked
         choice = st.selectbox('Login/Signup',['Login','Sign up'])
@@ -84,8 +81,6 @@ def app():
                 st.button('Sign out', on_click=t) 
             
                 
-    
-
                             
-    def ap():
-        st.write('Posts')
+    # def ap():
+    #     st.write('Posts')

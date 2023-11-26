@@ -40,8 +40,8 @@ class MultiApp:
                 )
 
         
-        if app == "Home":
-            home.app()
+        if app == "Chat":
+            chat.app()
         if app == "Account":
             account.app()          
         if app == 'Schedules':
