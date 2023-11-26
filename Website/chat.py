@@ -15,8 +15,9 @@ def app():
     st.session_state.db=db
     # st.title('  :violet[Pondering]  :sunglasses:')
     
-    ph = ''
+    #ph = ''
     if st.session_state.username=='':
-        ph = 'Login to be able to post!!'
+        #ph = 'Login to be able to post!!'
+        st.text('Login to be able to use the chat!!')
     else:
         st.text('home')
