@@ -26,10 +26,10 @@ class MultiApp:
         # app = st.sidebar(
         with st.sidebar:        
             app = option_menu(
-                menu_title='Pondering ',
-                options=['Home','Account','Schedules','about'],
-                icons=['house-fill','person-circle','chat-fill','info-circle-fill'],
-                menu_icon='chat-text-fill',
+                menu_title='Doc-IT-Right',
+                options=['Chat','Account','Schedules','about'],
+                icons=['chat-fill','person-circle','calendar-week-fill','info-circle-fill'],
+                menu_icon='check-circle-fill',
                 default_index=1,
                 styles={
                     "container": {"padding": "5!important","background-color":'black'},

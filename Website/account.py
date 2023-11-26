@@ -6,7 +6,12 @@ from firebase_admin import auth
 
 
 cred = credentials.Certificate("doc-it-right-d9605-e809d4f40dec.json")
-firebase_admin.initialize_app(cred)
+try:
+    firebase_admin.get_app()
+    print("Firebase app is already initialized.")
+except ValueError:
+    # Initialize the app if it hasn't been initialized yet
+    firebase_admin.initialize_app(cred)
 def app():
 # Usernm = []
     st.title('Welcome to :blue[Doc-IT-Right] :sunglasses:')
