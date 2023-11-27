@@ -5,7 +5,7 @@ from firebase_admin import credentials
 from firebase_admin import auth
 
 
-cred = credentials.Certificate("doc-it-right-d9605-e809d4f40dec.json")
+cred = credentials.Certificate("doc-it-right-d9605-d1d46f90742d.json")
 try:
     firebase_admin.get_app()
     print("Firebase app is already initialized.")
