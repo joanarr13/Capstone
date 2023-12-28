@@ -12,15 +12,15 @@ st.set_page_config(
 
 class MultiApp:
 
-    def __init__(self):
-        self.apps = []
+    # def __init__(self):
+    #     self.apps = []
 
-    def add_app(self, title, func):
+    # def add_app(self, title, func):
 
-        self.apps.append({
-            "title": title,
-            "function": func
-        })
+    #     self.apps.append({
+    #         "title": title,
+    #         "function": func
+    #     })
 
     def run():
         # app = st.sidebar(
