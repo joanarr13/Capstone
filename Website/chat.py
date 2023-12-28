@@ -8,10 +8,6 @@ from chat_bot import PizzaChatBot
 from util import local_settings
 from prompt_list import prompts
 
-# def app():
-    
-#     st.text('home')
-
 
 def app():
     
@@ -20,12 +16,10 @@ def app():
 
     db=firestore.client()
     st.session_state.db=db
-    # st.title('  :violet[Pondering]  :sunglasses:')
+    # st.title('  :violet[DOC-IT-RIGHT]  :sunglasses:')
     
-    #ph = ''
     if st.session_state.username=='':
 
-        #ph = 'Login to be able to post!!'
         st.text('Login to be able to use the chat!!')
 
     else:
