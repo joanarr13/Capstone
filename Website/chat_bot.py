@@ -64,7 +64,6 @@ class PizzaChatBot:
             system_behavior=system_behavior
         )
 
-
     def generate_response(self, message: str):
         return self.engine.get_completion(message)
 
@@ -75,7 +74,10 @@ class PizzaChatBot:
         return f"🤖 {class_name}."
 
     def reset(self):
-        ...
+        self.engine = GPT_Helper(
+            OPENAI_API_KEY=local_settings.OPENAI_API_KEY,
+            system_behavior=self.__system_behavior
+    )
 
     @property
     def memory(self):
