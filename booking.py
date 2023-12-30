@@ -163,10 +163,16 @@ def appointment_booking(arguments):
            
                 # checking if the slot is available
         if provided_date and provided_time and email_address and doctor:
-            slot_checking = appointment_checking(arguments)
+            slot_checking = appointment_checking(arguments) 
             doc_checking = doctor_checking(arguments)
+
+            while doc_checking != True:
+                return doc_checking        
+
+            while slot_checking != True:
+                return slot_checking   
         
-            if slot_checking == "Slot available" and doc_checking == True:        
+            if doc_checking == True and slot_checking == True:        
     
                 if day_list[start_date_time.date().weekday()] == "Saturday":
                     #   if start_date_time.time() >= limit1 and start_date_time.time() <= limit3:
@@ -232,8 +238,7 @@ def appointment_booking(arguments):
                     return "Appointment added successfully."
                     #else:
                     #    return "Please try to book an appointment into working hours, which is 10 AM to 7 PM."
-            else:
-                return slot_checking
+          
         else:
             return "Please provide all necessary details: Date, time, email and doctor."
     
@@ -242,7 +247,6 @@ def appointment_booking(arguments):
         traceback.print_exc()
         return "We are facing an error while processing your request. Please try again."
 
-       # return "We are facing an error while processing your request. Please try again."
 
 
 #------------rescheduling--------------
@@ -256,14 +260,13 @@ def appointment_reschedule(arguments):
         timezone = pytz.timezone('Europe/Lisbon')
         start_date_time = timezone.localize(datetime.strptime(start_date_time, "%Y-%m-%d %H:%M:%S"))
         email_address = json.loads(arguments)['email_address']
-        doctor = json.loads(arguments)['doctor']
+#        doctor = json.loads(arguments)['doctor']
 
         existing_doctors = ["Dr. João Santos", "Dr. Miguel Costa", "Dra. Sofia Pereira", 'Dra. Mariana Chagas', 'Dr. António Oliveira',
                             'Dra. Inês Martins', 'Dr. Ângelo Rodrigues', 'Dr. José Dias']
 
         
-        
-        if provided_date and provided_time and email_address and doctor:
+        if provided_date and provided_time and email_address:
             if start_date_time < datetime.now(timezone):
                 return "Please enter valid date and time."
             else:
@@ -278,7 +281,7 @@ def appointment_reschedule(arguments):
                                 id = event['id']
                                 final_event = event
                         if final_event:
-                            if appointment_checking(arguments) == "Slot is available for appointment. Would you like to proceed?":
+                            if appointment_checking(arguments) == True:
                                 final_event['start']['dateTime'] = start_date_time.strftime("%Y-%m-%dT%H:%M:%S")
                                 final_event['end']['dateTime'] = end_date_time.strftime("%Y-%m-%dT%H:%M:%S")
                                 service.events().update(calendarId='primary', eventId=id, body=final_event).execute()
@@ -313,8 +316,12 @@ def appointment_reschedule(arguments):
                         return "Please try to book an appointment into working hours, which is 9 AM to 7 PM."
         else: 
             return "Please provide all necessary details: Start date, End date and Email address."
-    except:
-        return "We are unable to process, please try again."
+        
+    except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return "We are enable to process. Please try again."
+
     
 #-------------------Cancel appointment-------------------
 
@@ -366,7 +373,7 @@ def appointment_checking(arguments):
                     if events_result['items']:
                         return "Sorry slot is not available."
                     else:
-                        return "Slot is available for appointment. Would you like to proceed?"
+                        return True
                 else:
                     return "Please try to check an appointment within working hours, which is 9 AM to 11h30 AM at saturday."
             else:
@@ -376,7 +383,7 @@ def appointment_checking(arguments):
                     if events_result['items']:
                         return "Sorry slot is not available."
                     else:
-                        return 'Slot available'
+                        return True
                 else:
                     return "Please try to check an appointment within working hours, which is 9 AM to 7h30 PM."
     except:
