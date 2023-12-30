@@ -262,6 +262,7 @@ def appointment_reschedule(arguments):
         email_address = json.loads(arguments)['email_address']
 #        doctor = json.loads(arguments)['doctor']
 
+
         existing_doctors = ["Dr. João Santos", "Dr. Miguel Costa", "Dra. Sofia Pereira", 'Dra. Mariana Chagas', 'Dr. António Oliveira',
                             'Dra. Inês Martins', 'Dr. Ângelo Rodrigues', 'Dr. José Dias']
 
@@ -293,7 +294,7 @@ def appointment_reschedule(arguments):
                     else:
                         return "Please try to book an appointment into working hours, which is 9 AM to 11 AM at saturday."
                 else:
-                    if start_date_time.time() >= limit1 and start_date_time.time() <= limit2:
+                    if start_date_time.time() >= limit1 and start_date_time.time() <= limit2: #Day of the week
                         end_date_time = start_date_time + timedelta(hours=2)
                         events = service.events().list(calendarId="primary").execute()
                         id = ""
