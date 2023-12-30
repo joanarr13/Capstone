@@ -42,21 +42,25 @@ limit1 = datetime.strptime("9:00:00", "%H:%M:%S").time()
 limit2 = datetime.strptime("20:00:00", "%H:%M:%S").time()
 limit3 = datetime.strptime("12:00:00", "%H:%M:%S").time()
 
-def is_time_in_range(selected_time, time_range_dict):
-    start_time = datetime.strptime(time_range_dict['start'], "%H:%M:%S").time()
-    end_time = datetime.strptime(time_range_dict['end'], "%H:%M:%S").time()
-    return start_time <= selected_time <= end_time
+def is_time_in_range(selected_time, time_list):
+    selected_time = datetime.strptime(selected_time, "%H:%M:%S").time()
+    
+    for time in time_list:
+        time_obj = datetime.strptime(time, "%H:%M:%S").time()
+        if time_obj == selected_time:
+            return True
+    return False
 
 
 doctor_time_tables = {
-    "Dr. João Santos": {"monday": {'start': "09:00:00", 'end': "13:00:00"}, "Wednesday": {'start': '18:00:00','end': "20:00:00"}},
-    "Dr. Miguel Costa": {"Monday": {'start': "13:30:00", 'end': "17:30:00"}, "Thursday": {'start': '09:00:00', 'end': "13:00:00"}},
-    "Dra. Sofia Pereira": {"Monday": {'start': "18:00:00", 'end': "20:00:00"}, "Thursday": {'start': '13:30:00', 'end': "17:30:00"}},
-    "Dra. Mariana Chagas": {"Tuesday": {'start': "09:00:00", 'end': "13:00:00"}, "Thursday": {'start': '18:00:00', 'end': "20:00:00"}},
-    "Dr. António Oliveira": {"Tuesday": {'start': "13:30:00", 'end': "17:30:00"}, "Friday": {'start': '09:00:00', 'end': "13:00:00"}},
-    "Dra. Inês Martins": {"Tuesday": {'start': "18:00:00", 'end': "20:00:00"}, "Friday": {'start': '13:30:00', 'end': "17:30:00"}},
-    "Dr. Ângelo Rodrigues": {"Wednesday": {'start': "09:00:00", 'end': "13:00:00"}, "Friday": {'start': '18:00:00', 'end': "20:00:00"}},
-    "Dr. José Dias": {"Wednesday": {'start': "13:30:00", 'end': "17:30:00"}, "saturday": {'start': '09:00:00', 'end': "12:00:00"}},
+    "Dr. João Santos": {"monday": {'start': '09:00:00', 'end': "13:00:00"}, "wednesday": {'start': '18:00:00','end': "20:00:00"}},
+    "Dr. Miguel Costa": {"monday": {'start': "13:30:00", 'end': "17:30:00"}, "thursday": {'start': '09:00:00', 'end': "13:00:00"}},
+    "Dra. Sofia Pereira": {"monday": {'start': "18:00:00", 'end': "20:00:00"}, "thursday": {'start': '13:30:00', 'end': "17:30:00"}},
+    "Dra. Mariana Chagas": {"tuesday": {'start': "09:00:00", 'end': "13:00:00"}, "thursday": {'start': '18:00:00', 'end': "20:00:00"}},
+    "Dr. António Oliveira": {"tuesday": {'start': "13:30:00", 'end': "17:30:00"}, "friday": {'start': '09:00:00', 'end': "13:00:00"}},
+    "Dra. Inês Martins": {"tuesday": {'start': "18:00:00", 'end': "20:00:00"}, "friday": {'start': '13:30:00', 'end': "17:30:00"}},
+    "Dr. Ângelo Rodrigues": {"wednesday": {'start': "09:00:00", 'end': "13:00:00"}, "friday": {'start': '18:00:00', 'end': "20:00:00"}},
+    "Dr. José Dias": {"wednesday": {'start': "13:30:00", 'end': "17:30:00"}, "saturday": {'start': '09:00:00', 'end': "12:00:00"}},
 }
 
 def get_available_time_slots(doctor, day):
@@ -85,12 +89,14 @@ def get_available_times_message(doctor, day):
         return f"{doctor} is not available on {day}."
     return f"{doctor} is available on {day} at the following times: {', '.join(available_times)}."
 
-def choose_doctor_based_on_time(requested_time, requested_doctor, requested_date):
+def choose_doctor_based_on_time(requested_time_str, requested_doctor, requested_date_str):
     available_doctors = []
+    requested_date = datetime.strptime(requested_date_str, "%Y-%m-%d").strftime("%A").lower()   # Monday
+    requested_time = datetime.strptime(requested_time_str, "%H:%M:%S").time()  # 09:00:00
 
     for doctor, schedules in doctor_time_tables.items():
         for day, time_range in schedules.items():
-            if day == requested_date.strftime("%A"):
+            if day == requested_date:
                 start_time = datetime.strptime(time_range['start'], "%H:%M:%S").time()
                 end_time = datetime.strptime(time_range['end'], "%H:%M:%S").time()
 
@@ -100,10 +106,47 @@ def choose_doctor_based_on_time(requested_time, requested_doctor, requested_date
     if not available_doctors:
         return None  # No available doctors for the requested time
 
-    if requested_doctor not in available_doctors:
-        return None  # The originally requested doctor is not available at the requested time
+    if requested_doctor in available_doctors:
+        return requested_doctor
 
-    return requested_doctor
+    return None # The originally requested doctor is not available at the requested time
+
+def doctor_checking(arguments):
+    provided_date =  str(datetime.strptime(json.loads(arguments)['date'], "%Y-%m-%d").date())
+    provided_time = str(datetime.strptime(json.loads(arguments)['time'].replace("PM","").replace("AM","").strip(), "%H:%M:%S").time())
+    start_date_time = provided_date + " " + provided_time
+    timezone = pytz.timezone('Europe/Lisbon')
+    start_date_time = timezone.localize(datetime.strptime(start_date_time, "%Y-%m-%d %H:%M:%S"))
+    email_address = json.loads(arguments)['email_address']
+    doctor = json.loads(arguments)['doctor']
+    end_date_time = start_date_time + timedelta(hours=0.5)
+
+    
+    existing_doctors = ["Dr. João Santos", "Dr. Miguel Costa", "Dra. Sofia Pereira", 'Dra. Mariana Chagas', 'Dr. António Oliveira',
+                            'Dra. Inês Martins', 'Dr. Ângelo Rodrigues', 'Dr. José Dias']
+
+
+    if doctor is not None:
+        if doctor not in existing_doctors:
+            return "Please choose a valid doctor from the list: " + ", ".join(existing_doctors)
+                
+        day_of_week = start_date_time.strftime("%A").lower()
+        doctor_schedule = get_available_time_slots(doctor, day_of_week)
+
+        if not doctor_schedule or not is_time_in_range(provided_time, doctor_schedule):
+            available_times_message = get_available_times_message(doctor, day_of_week)
+            
+            return f"{doctor} is not available at the selected time. {available_times_message} Please choose a valid time."
+        else:
+            # Choose a doctor based on the requested time
+            requested_time = start_date_time.time().strftime("%H:%M:%S")
+            updated_doctor = choose_doctor_based_on_time(requested_time, doctor, provided_date)
+            if updated_doctor is None:
+                return False
+            # Update the 'doctor' variable with the chosen doctor
+            #doctor = updated_doctor
+            # Confirm the appointment
+            return True
 
 
 def appointment_booking(arguments):
@@ -117,38 +160,16 @@ def appointment_booking(arguments):
         doctor = json.loads(arguments)['doctor']
         end_date_time = start_date_time + timedelta(hours=0.5)
 
-        existing_doctors = ["Dr. João Santos", "Dr. Miguel Costa", "Dra. Sofia Pereira", 'Dra. Mariana Chagas', 'Dr. António Oliveira',
-                            'Dra. Inês Martins', 'Dr. Ângelo Rodrigues', 'Dr. José Dias']
-
-        if doctor is not None:
-            if doctor not in existing_doctors:
-                return "Please choose a valid doctor from the list: " + ", ".join(existing_doctors)
-                    
-            day_of_week = start_date_time.strftime("%A").lower()
-            doctor_schedule = get_available_time_slots(doctor, day_of_week)
-
-            if not doctor_schedule or not is_time_in_range(provided_time, doctor_schedule):
-                available_times_message = get_available_times_message(doctor, day_of_week)
-                
-                return f"{doctor} is not available at the selected time. {available_times_message} Please choose a valid time."
-            else:
-                # Choose a doctor based on the requested time
-                requested_time = start_date_time.time().strftime("%H:%M:%S")
-                updated_doctor = choose_doctor_based_on_time(requested_time, doctor)
-                if updated_doctor is None:
-                    return f"No available doctors for the requested time."
-                # Update the 'doctor' variable with the chosen doctor
-                doctor = updated_doctor
-                # Confirm the appointment
-                return f"Slot is available for an appointment with {doctor} on {start_date_time.strftime('%Y-%m-%d')} at {start_date_time.strftime('%H:%M')}. Would you like to proceed?"
-        
-        # checking if the slot is available
+           
+                # checking if the slot is available
         if provided_date and provided_time and email_address and doctor:
             slot_checking = appointment_checking(arguments)
-            if slot_checking == "Slot is available for appointment.Would you like to proceed?":        
+            doc_checking = doctor_checking(arguments)
         
+            if slot_checking == "Slot available" and doc_checking == True:        
+    
                 if day_list[start_date_time.date().weekday()] == "Saturday":
-                 #   if start_date_time.time() >= limit1 and start_date_time.time() <= limit3:
+                    #   if start_date_time.time() >= limit1 and start_date_time.time() <= limit3:
                     event = {
                         'summary': f"Appointment for {doctor}",
                         'location': "Lisbon",
@@ -164,9 +185,9 @@ def appointment_booking(arguments):
                         },
                         'attendees': [
                             {'email': email_address, 
-                             'doc': doctor},
+                                'doc': doctor},
                         ],
-                                          
+                                            
                         'reminders': {
                             'useDefault': False,
                             'overrides': [
@@ -196,7 +217,7 @@ def appointment_booking(arguments):
                         },
                         'attendees': [
                             {'email': email_address,
-                             'doctor': doctor},
+                                'doctor': doctor},
                         ],
                     
                         'reminders': {
@@ -347,7 +368,7 @@ def appointment_checking(arguments):
                     else:
                         return "Slot is available for appointment. Would you like to proceed?"
                 else:
-                    return "Please try to check an appointment within working hours, which is 9 AM to 11 AM at saturday."
+                    return "Please try to check an appointment within working hours, which is 9 AM to 11h30 AM at saturday."
             else:
                 if start_date_time.time() >= limit1 and start_date_time.time() <= limit2:
                     end_date_time = start_date_time + timedelta(hours=0.5)
@@ -355,7 +376,7 @@ def appointment_checking(arguments):
                     if events_result['items']:
                         return "Sorry slot is not available."
                     else:
-                        return "Slot is available for appointment. Would you like to proceed?"
+                        return 'Slot available'
                 else:
                     return "Please try to check an appointment within working hours, which is 9 AM to 7h30 PM."
     except:
@@ -463,12 +484,10 @@ functions = [
                     "example": "20:12:45", 
                     "description": "time, on which user wants to book an appointment on a specified date. Time must be in %H:%M:%S format.",
                 },
-                'doctor': {
-                    "type" : "string",
-                    "description": "doctor assigned"
-                }
+                
+                
             },
-            "required": ["date","time", "doctor"],
+            "required": ["date","time"],
         },
     }]
 
