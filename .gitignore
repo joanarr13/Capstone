@@ -160,3 +160,6 @@ cython_debug/
 #.idea/
 
 Website/doc-it-right-d9605-d1d46f90742d.json
+
+credentials.json
+token.json
