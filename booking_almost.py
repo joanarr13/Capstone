@@ -164,7 +164,7 @@ def check_event(arguments):
         formatted_time = start_datetime.strftime('%H:%M:%S')
 
 
-        return f"Your next appointment was scheduled for {formatted_date} at {formatted_time} with {final_event['summary']} do you wish t proceed?", final_event
+        return f"Your next appointment was scheduled for {formatted_date} at {formatted_time} with {final_event['summary']} do you wish to keep the same doctor?", final_event
     else:
         return f"Your email is not assigned to any appointment. Please try again."
 
@@ -277,14 +277,7 @@ def appointment_reschedule(arguments):
       #  provided_date = None  # Initialize provided_date
       #  provided_time = None
         #doctor = None
-        provided_date =  str(datetime.strptime(json.loads(arguments)['date'], "%Y-%m-%d").date())
-        provided_time = str(datetime.strptime(json.loads(arguments)['time'].replace("PM","").replace("AM","").strip(), "%H:%M:%S").time())
-        start_date_time = provided_date + " " + provided_time
-        timezone = pytz.timezone('Europe/Lisbon')
-        start_date_time = timezone.localize(datetime.strptime(start_date_time, "%Y-%m-%d %H:%M:%S"))
-        end_date_time = start_date_time + timedelta(hours=0.5)
-        doctor = json.loads(arguments)['doctor']
-
+        
 
 
         # events = service.events().list(calendarId="primary").execute()  #all the events presented in google calendar
@@ -308,7 +301,12 @@ def appointment_reschedule(arguments):
 
         if "yes" in user_response.lower():
 
-           
+            provided_date =  str(datetime.strptime(json.loads(arguments)['date'], "%Y-%m-%d").date())
+            provided_time = str(datetime.strptime(json.loads(arguments)['time'].replace("PM","").replace("AM","").strip(), "%H:%M:%S").time())
+            start_date_time = provided_date + " " + provided_time
+            timezone = pytz.timezone('Europe/Lisbon')
+            start_date_time = timezone.localize(datetime.strptime(start_date_time, "%Y-%m-%d %H:%M:%S"))
+            end_date_time = start_date_time + timedelta(hours=0.5)
          
             if provided_date and provided_time:
 
@@ -328,7 +326,7 @@ def appointment_reschedule(arguments):
                     event = {
                         'summary': final_event['summary'],
                         'location': "Lisbon",
-                        'description': "This appointment was scheduled by the chatbot",
+                        'description': "{This appointment was scheduled by the chatbot}",
                         
                         'start': {
                             'dateTime': start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -360,6 +358,8 @@ def appointment_reschedule(arguments):
                 
         if "no" in user_response.lower():
 
+            doctor = json.loads(arguments)['doctor']
+
 
             #choose other doctor
 
@@ -379,7 +379,7 @@ def appointment_reschedule(arguments):
                     event = {
                         'summary': doctor,
                         'location': "Lisbon",
-                        'description': "This appointment was scheduled by the chatbot",
+                        'description': "{This appointment was scheduled by the chatbot}",
                         
                         'start': {
                             'dateTime': start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -401,10 +401,8 @@ def appointment_reschedule(arguments):
                             ],
                         },
                     }
-                    id = final_event['id']
-                    service.events().delete(calendarId='primary', eventId=id).execute()
                     service.events().insert(calendarId='primary', body=event).execute()
-                    return "Appointment rescheduled successfully."              
+                    return "Appointment added successfully."              
             else:
                  return "Please provide date, time and doctor of preference."
         else:

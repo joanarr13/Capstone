@@ -7,6 +7,7 @@ from google.oauth2.credentials import Credentials
 import pytz
 from util import local_settings
 
+
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 service = build('calendar', 'v3', credentials=creds)
@@ -36,7 +37,6 @@ def chat_completion_request(messages, functions=None, function_call=None, model=
         print("Unable to generate ChatCompletion response")
         print(f"Exception: {e}")
         return e
-
 
 limit1 = datetime.strptime("9:00:00", "%H:%M:%S").time()
 limit2 = datetime.strptime("20:00:00", "%H:%M:%S").time()
@@ -111,14 +111,14 @@ def choose_doctor_based_on_time(requested_time_str, requested_doctor, requested_
 
     return None # The originally requested doctor is not available at the requested time
 
-def doctor_checking(arguments, predetermined_doctor = None):
+def doctor_checking(arguments):
     provided_date =  str(datetime.strptime(json.loads(arguments)['date'], "%Y-%m-%d").date())
     provided_time = str(datetime.strptime(json.loads(arguments)['time'].replace("PM","").replace("AM","").strip(), "%H:%M:%S").time())
     start_date_time = provided_date + " " + provided_time
     timezone = pytz.timezone('Europe/Lisbon')
     start_date_time = timezone.localize(datetime.strptime(start_date_time, "%Y-%m-%d %H:%M:%S"))
-    # email_address = json.loads(arguments)['email_address']
-    doctor = predetermined_doctor or json.loads(arguments)['doctor']
+    email_address = json.loads(arguments)['email_address']
+    doctor = json.loads(arguments)['doctor']
     end_date_time = start_date_time + timedelta(hours=0.5)
 
     
@@ -142,34 +142,13 @@ def doctor_checking(arguments, predetermined_doctor = None):
             requested_time = start_date_time.time().strftime("%H:%M:%S")
             updated_doctor = choose_doctor_based_on_time(requested_time, doctor, provided_date)
             if updated_doctor is None:
-                return f"Please try again"
+                return False
+            # Update the 'doctor' variable with the chosen doctor
+            #doctor = updated_doctor
             # Confirm the appointment
             return True
-        
-def check_event(arguments):
-
-    email_address = json.loads(arguments)['email_address']
-    events = service.events().list(calendarId="primary").execute()  #all the events presented in google calendar
-    id = ""
-    final_event = None
-    events_list = []
-    for event in events['items']:
-        if event['attendees'][0]['email'] == email_address: #if the email exists in the attendees 
-            id = event['id'] #id => event id
-            final_event = event #final event => is the full event
-    if final_event:
-        start_datetime_str = final_event['start']['dateTime']
-        start_datetime = datetime.fromisoformat(start_datetime_str[:-1]).replace(tzinfo=pytz.UTC)
-        formatted_date= start_datetime.strftime('%Y-%m-%d')
-        formatted_time = start_datetime.strftime('%H:%M:%S')
 
 
-        return f"Your next appointment was scheduled for {formatted_date} at {formatted_time} with {final_event['summary']} do you wish t proceed?", final_event
-    else:
-        return f"Your email is not assigned to any appointment. Please try again."
-
-#---------------BOOKING----------------
-        
 def appointment_booking(arguments):
     try:
         provided_date =  str(datetime.strptime(json.loads(arguments)['date'], "%Y-%m-%d").date())
@@ -200,7 +179,7 @@ def appointment_booking(arguments):
                     event = {
                         'summary': doctor,
                         'location': "Lisbon",
-                        'description': "{This appointment was scheduled by the chatbot}",
+                        'description': "This appointment was scheduled by the chatbot",
                         
                         'start': {
                             'dateTime': start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -273,142 +252,69 @@ def appointment_booking(arguments):
 def appointment_reschedule(arguments):
 
     try:
-        email_address = json.loads(arguments)['email_address']
-      #  provided_date = None  # Initialize provided_date
-      #  provided_time = None
-        #doctor = None
         provided_date =  str(datetime.strptime(json.loads(arguments)['date'], "%Y-%m-%d").date())
         provided_time = str(datetime.strptime(json.loads(arguments)['time'].replace("PM","").replace("AM","").strip(), "%H:%M:%S").time())
         start_date_time = provided_date + " " + provided_time
         timezone = pytz.timezone('Europe/Lisbon')
         start_date_time = timezone.localize(datetime.strptime(start_date_time, "%Y-%m-%d %H:%M:%S"))
-        end_date_time = start_date_time + timedelta(hours=0.5)
+        email_address = json.loads(arguments)['email_address']
         doctor = json.loads(arguments)['doctor']
 
 
-
-        # events = service.events().list(calendarId="primary").execute()  #all the events presented in google calendar
-        # id = ""
-        # final_event = None
-        # for event in events['items']:
-        #     if event['attendees'][0]['email'] == email_address: #if the email exists in the attendees 
-        #         id = event['id'] #id => event id
-        #         final_event = event #final event => is the full event
-           
-
         existing_doctors = ["Dr. João Santos", "Dr. Miguel Costa", "Dra. Sofia Pereira", 'Dra. Mariana Chagas', 'Dr. António Oliveira',
                             'Dra. Inês Martins', 'Dr. Ângelo Rodrigues', 'Dr. José Dias']
+
         
-        # check if the event exists and conclude if the user wants to keep the same doctor
-        checking = check_event(arguments)
-        check_same_doctor, final_event = checking[0], checking[1]
-        print(check_same_doctor)  # Ask the user the question
-        #response = chat_completion_request(check_same_doctor)
-        user_response = input("Please enter your question here: ")
-
-        if "yes" in user_response.lower():
-
-           
-         
-            if provided_date and provided_time:
-
-            #Confirm that the new date is available in the calendar and with the doctor
-                slot_checking = appointment_checking(arguments) 
-                doc_checking = doctor_checking(arguments, predetermined_doctor = final_event['summary'])
-
-                while doc_checking != True:
-                    return doc_checking        
-
-                while slot_checking != True:
-                    return slot_checking   
-            
-                # if the new date is available and correct
-                if doc_checking == True and slot_checking == True:        
-
-                    event = {
-                        'summary': final_event['summary'],
-                        'location': "Lisbon",
-                        'description': "This appointment was scheduled by the chatbot",
-                        
-                        'start': {
-                            'dateTime': start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                            'timeZone': 'Europe/Lisbon',
-                        },
-                        'end': {
-                            'dateTime': end_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                            'timeZone': 'Europe/Lisbon',
-                        },
-                        'attendees': [
-                            {'email': email_address},
-                        ],
-                                            
-                        'reminders': {
-                            'useDefault': False,
-                            'overrides': [
-                                {'method': 'email', 'minutes': 24 * 60},
-                                {'method': 'popup', 'minutes': 10},
-                            ],
-                        },
-                    }
-                    id = final_event['id']
-                    service.events().delete(calendarId='primary', eventId=id).execute()
-                    service.events().insert(calendarId='primary', body=event).execute()
-  
-                    return "Appointment rescheduled successfully."
+        if provided_date and provided_time and email_address:
+            if start_date_time < datetime.now(timezone):
+                return "Please enter valid date and time."
             else:
-                 return "Please provide date and time."
-                
-        if "no" in user_response.lower():
-
-
-            #choose other doctor
-
-            if provided_date and provided_time and doctor:
-
-                slot_checking = appointment_checking(arguments) 
-                doc_checking = doctor_checking(arguments)
-
-                while doc_checking != True:
-                    return doc_checking        
-
-                while slot_checking != True:
-                    return slot_checking   
-        
-                if doc_checking == True and slot_checking == True:        
-                    
-                    event = {
-                        'summary': doctor,
-                        'location': "Lisbon",
-                        'description': "This appointment was scheduled by the chatbot",
-                        
-                        'start': {
-                            'dateTime': start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                            'timeZone': 'Europe/Lisbon',
-                        },
-                        'end': {
-                            'dateTime': end_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                            'timeZone': 'Europe/Lisbon',
-                        },
-                        'attendees': [
-                            {'email': email_address},
-                        ],
-                                            
-                        'reminders': {
-                            'useDefault': False,
-                            'overrides': [
-                                {'method': 'email', 'minutes': 24 * 60},
-                                {'method': 'popup', 'minutes': 10},
-                            ],
-                        },
-                    }
-                    id = final_event['id']
-                    service.events().delete(calendarId='primary', eventId=id).execute()
-                    service.events().insert(calendarId='primary', body=event).execute()
-                    return "Appointment rescheduled successfully."              
-            else:
-                 return "Please provide date, time and doctor of preference."
-        else:
-            return "Please answer yes or no"
+                if day_list[start_date_time.date().weekday()] == "Saturday":
+                    if start_date_time.time() >= limit1 and start_date_time.time() <= limit3:
+                        end_date_time = start_date_time + timedelta(hours=2)
+                        events = service.events().list(calendarId="primary").execute()
+                        id = ""
+                        final_event = None
+                        for event in events['items']:
+                            if event['attendees'][0]['email'] == email_address:
+                                id = event['id']
+                                final_event = event
+                        if final_event:
+                            if appointment_checking(arguments) == True:
+                                final_event['start']['dateTime'] = start_date_time.strftime("%Y-%m-%dT%H:%M:%S")
+                                final_event['end']['dateTime'] = end_date_time.strftime("%Y-%m-%dT%H:%M:%S")
+                                service.events().update(calendarId='primary', eventId=id, body=final_event).execute()
+                                return "Appointment rescheduled."
+                            else:
+                                return "Sorry, slot is not available at this time, please try a different time."
+                        else:
+                            return "No registered event found on your id."
+                    else:
+                        return "Please try to book an appointment into working hours, which is 9 AM to 11 AM at saturday."
+                else:
+                    if start_date_time.time() >= limit1 and start_date_time.time() <= limit2: #Day of the week
+                        end_date_time = start_date_time + timedelta(hours=2)
+                        events = service.events().list(calendarId="primary").execute()
+                        id = ""
+                        final_event = None
+                        for event in events['items']:
+                            if event['attendees'][0]['email'] == email_address:
+                                id = event['id']
+                                final_event = event
+                        if final_event:
+                            if appointment_checking(arguments) == "Slot is available for appointment. Would you like to proceed?":
+                                final_event['start']['dateTime'] = start_date_time.strftime("%Y-%m-%dT%H:%M:%S")
+                                final_event['end']['dateTime'] = end_date_time.strftime("%Y-%m-%dT%H:%M:%S")
+                                service.events().update(calendarId='primary', eventId=id, body=final_event).execute()
+                                return "Appointment rescheduled."
+                            else:
+                                return "Sorry, slot is not available at this time, please try a different time."
+                        else:
+                            return "No registered event found on your id."
+                    else:
+                        return "Please try to book an appointment into working hours, which is 9 AM to 7 PM."
+        else: 
+            return "Please provide all necessary details: Start date, End date and Email address."
         
     except Exception as e:
             import traceback
@@ -448,8 +354,7 @@ def appointment_delete(arguments):
     except:
         return "We are unable to process, please try again."
 
-# -----------CHECKING---------------
-    
+
 def appointment_checking(arguments):
     try:
         provided_date =  str(datetime.strptime(json.loads(arguments)['date'], "%Y-%m-%d").date())
@@ -522,28 +427,26 @@ functions = [
         "parameters": {
             "type": "object",
             "properties": {
-                 "email_address": {
-                    "type": "string",
-                    "description": "email_address of the user gives for identification. First thing to be asked.",
-                },
                 "date": {
                     "type": "string",
                     "format": "date",
                     "example":"2023-07-23",
-                    "description": " It is the date on which the user wants to reschedule the appointment. The date must be in the format of YYYY-MM-DD.",
+                    "description": "It is the date on which the user wants to reschedule the appointment. The date must be in the format of YYYY-MM-DD.",
                 },
                 "time": {
                     "type": "string",
                     "description": "It is the time on which user wants to reschedule the appointment. Time must be in %H:%M:%S format.",
                 },
+                "email_address": {
+                    "type": "string",
+                    "description": "email_address of the user gives for identification.",
+                },
                 'doctor': {
                     "type" : "string",
-                    "description": "Asked if the answer to this: 'Your next appointment was scheduled for {formatted_date} at {formatted_time} with {final_event['summary']} do you wish to keep the same doctor?' is 'no'"
+                    "description": "doctor of preference, must be one among the existants: {existing_doctors}, otherwise a random one will be assigned"
                 }
-               
-                
             },
-            "required": ["email_address", "date","time", "doctor"],
+            "required": ["date","time","email_address", "doctor"],
         },
     },
     {
@@ -602,10 +505,8 @@ day_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 
 
 messages = [{"role": "system", "content": f"""You are an expert in booking appointments. You need to ask the user for the appointment date, appointment time, doctor of preference and email ID. The user can book the appointment from 9 AM to 8 PM from Monday to Friday, and from 9 AM to 12 AM on Saturdays. You need to remember that today's date is {date.today()} and day is {day_list[date.today().weekday()]}. Check if the time provided by the user is within the working hours then only you will proceed.
              Also check if the appointment date is according to the time frame of the chosen doctor.
-        
 
 Instructions: 
-- If user wants to reschedule follow this order: ask for email, tnew date and time. Later the doctor of the new appointment if he answer no to keep the same.
 - Don't make assumptions about what values to plug into functions, if the user does not provide any of the required parameters then you must need to ask for clarification.
 - Make sure the email Id is valid and not empty.
 - Make sure the doctor asked for exists.
@@ -616,6 +517,7 @@ Instructions:
 - If a user didn't specify "ante meridiem (AM)" or "post meridiem (PM)" while providing the time, then you must have to ask for clarification. If the user didn't provide day, month, and year while giving the time then you must have to ask for clarification.
 
                          
+ 
 Make sure to follow the instructions carefully while processing the request. 
 """}]
 
@@ -644,4 +546,3 @@ while user_input.strip().lower() != "exit" and user_input.strip().lower() != "by
         print("Response is: ", result)
        
     user_input = input("Please enter your question here: ")
-
