@@ -260,7 +260,7 @@ def appointment_reschedule(arguments):
         timezone = pytz.timezone('Europe/Lisbon')
         start_date_time = timezone.localize(datetime.strptime(start_date_time, "%Y-%m-%d %H:%M:%S"))
         email_address = json.loads(arguments)['email_address']
-#        doctor = json.loads(arguments)['doctor']
+        doctor = json.loads(arguments)['doctor']
 
 
         existing_doctors = ["Dr. João Santos", "Dr. Miguel Costa", "Dra. Sofia Pereira", 'Dra. Mariana Chagas', 'Dr. António Oliveira',
