@@ -16,6 +16,5 @@ def app():
     if st.session_state.username=='':
         ph = 'Login first!!'
     else:
-        from account import Usernm
-        ph = 'Hello, ' + Usernm
+        ph = 'Hello, ' + st.session_state.username + '!'
     post=st.text_area(label=' :orange[+ New Post]', placeholder=ph, height=None, max_chars=500)

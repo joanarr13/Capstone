@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 
-import chat, account, schedule, about
+import home, account, chat, schedule, about
 st.set_page_config(
         page_title="Doc-IT-Right",
 )
@@ -66,8 +66,8 @@ class MultiApp:
         with st.sidebar:        
             app = option_menu(
                 menu_title='Doc-IT-Right',
-                options=['Chat','Account','Schedules','about'],
-                icons=['chat-fill','person-circle','calendar-week-fill','info-circle-fill'],
+                options=['Home', 'Account','Chat','Schedules','about'],
+                icons=['house-fill','person-circle','chat-fill','calendar-week-fill','info-circle-fill'],
                 menu_icon='check-circle-fill',
                 default_index=1,
                 styles={
@@ -87,8 +87,9 @@ class MultiApp:
 multi_app = MultiApp()
 
 # Register apps
-multi_app.add_app("Chat", chat.app)
+multi_app.add_app("Home", home.app)
 multi_app.add_app("Account", account.app)
+multi_app.add_app("Chat", chat.app)
 multi_app.add_app("Schedules", schedule.app)
 multi_app.add_app("About", about.app)
 
