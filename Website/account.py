@@ -75,6 +75,7 @@ def app():
             confirmation = st.checkbox('I daclare that the information above is correct')
 
             # FALTA ADICIONAR OS OUTROS DADOS DO CLIENTE QUE SÃO INÚTEIS... AGE, FIRST NAME, BLA BLA BLA
+            # ALSO FAZER A DIVISÃO DE DADOS ENTRE CLIENTE E MÉDICO
 
 
             if st.button('Create my account'):
@@ -83,7 +84,7 @@ def app():
                     
                     # AQUI: METER OS DADOS NO FIREBASE
                     # data={"Content":[post],'Username':st.session_state.username}
-                    # db.collection('pATIENTS').document(st.session_state.username).set(data)
+                    # db.collection('Patients').document(st.session_state.username).set(data)
                 
                     st.success('Account created successfully!')
                     st.markdown('Please Login using your email and password')
