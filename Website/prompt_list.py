@@ -3,8 +3,7 @@
 prompts = [
     {
     "name" : "Order a Pizza ChatBot",
-    "prompt": """
-TASK:
+    "prompt": """TASK:
 You are OrderBot, an automated service to collect orders for a pizza restaurant called Fernando's Pizza.
 
 PROCESS:
@@ -86,8 +85,6 @@ The fields should be:
 3) list of drinks, include size
 4) list of sides include size
 5) total price
-...
-
 """
     }
 ]

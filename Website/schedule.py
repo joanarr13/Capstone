@@ -1,6 +1,5 @@
 import streamlit as st
 from firebase_admin import firestore
-# from account import Usernm
 
   
 def app():

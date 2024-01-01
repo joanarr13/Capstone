@@ -7,27 +7,18 @@ import random
 from openai import OpenAI
 from util import local_settings
 
-# [i]                                                                                            #
-# [i] OpenAI API                                                                                 #
-# [i]                                                                                            #
 
+# OpenAI API ------------------------------------------------------------------------------------------------------------------------------------
 class GPT_Helper:
-    def __init__(self,
-        OPENAI_API_KEY: str,
-        system_behavior: str="",
-        model="gpt-3.5-turbo",
-    ):
+    def __init__(self, OPENAI_API_KEY: str, system_behavior: str="", model="gpt-3.5-turbo"):
         self.client = OpenAI(api_key=OPENAI_API_KEY)
         self.messages = []
         self.model = model
 
         if system_behavior:
-            self.messages.append({
-                "role": "system",
-                "content": system_behavior
-            })
+            self.messages.append({"role": "system", "content": system_behavior})
 
-    # [i] get completion from the model             #
+    # get completion from the model
     def get_completion(self, prompt, temperature=0):
 
         self.messages.append({"role": "user", "content": prompt})
@@ -47,11 +38,11 @@ class GPT_Helper:
 
         return completion.choices[0].message.content
 
-# [i]                                                                                            #
-# [i] PizzaChatBot                                                                               #
-# [i]                                                                                            #
 
-class PizzaChatBot:
+
+# ChatBot ---------------------------------------------------------------------------------------------------------------------------------------
+
+class ChatBot:
     """
     Generate a response by using LLMs.
     """

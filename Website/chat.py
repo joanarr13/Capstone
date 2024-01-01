@@ -4,10 +4,9 @@ from firebase_admin import firestore
 import time
 import streamlit as st
 
-from chat_bot import PizzaChatBot
+from chat_bot import ChatBot
 from util import local_settings
-from prompt_list import prompts
-
+from prompt_list2 import prompts
 
 def app():
     
@@ -29,50 +28,43 @@ def app():
             Initialize the app
             """
 
-            with st.expander("Bot Configuration"):
-                st.selectbox(label="Prompt", options=["prompt1", "prompt2"])
-                st.session_state.system_behavior = st.text_area(
-                    label="Prompt",
-                    value=prompts[0]["prompt"]
-                )
 
-            st.sidebar.title("🤖 🍕")
+            with st.expander("Bot Configuration"):
+                selected_prompt = st.selectbox(label="Prompt", options=[prompt['name'] for prompt in prompts])
+                selected_prompt_dict = next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)
+                st.session_state.system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict["prompt"])
+
+            st.sidebar.title("🤖 🥼")
 
             if "chatbot" not in st.session_state:
-                st.session_state.chatbot = PizzaChatBot(st.session_state.system_behavior)
+                st.session_state.chatbot = ChatBot(st.session_state.system_behavior)
 
             with st.sidebar:
-                st.markdown(
-                    f"ChatBot in use: <font color='cyan'>{st.session_state.chatbot.__str__()}</font>", unsafe_allow_html=True
-                )
+                st.markdown(f"ChatBot in use: <font color='cyan'>{st.session_state.chatbot.__str__()}</font>", unsafe_allow_html=True)
 
 
-        # [i]                                                                                            #
-        # [i] Display History Message                                                                    #
-        # [i]                                                                                            #
+        # ------------- Display History Message -------------
 
         def display_history_messages():
             # Display chat messages from history on app rerun
             for message in st.session_state.chatbot.memory:
-                with st.chat_message(message["role"]):
-                    st.markdown(message["content"])
+                if message["role"] != "system":
+                    with st.chat_message(message["role"]):
+                        st.markdown(message["content"])
 
 
-        # [i]                                                                                            #
-        # [i] Display User Message                                                                       #
-        # [i]                                                                                            #
+        # --------------- Display User Message ---------------
 
         def display_user_msg(message: str):
             """
             Display user message in chat message container
             """
+
             with st.chat_message("user", avatar="😎"):
                 st.markdown(message)
 
 
-        # [i]                                                                                            #
-        # [i] Display User Message                                                                       #
-        # [i]                                                                                            #
+        # ------------------ Display Assistant Message ------------------
 
         def display_assistant_msg(message: str, animated=True):
             """
@@ -93,32 +85,29 @@ def app():
                         message_placeholder.markdown(full_response + "▌")
 
                     message_placeholder.markdown(full_response)
+                    
             else:
                 with st.chat_message("assistant", avatar="🤖"):
                     st.markdown(message)
 
 
-        # [*]                                                                                            #
-        # [*] MAIN                                                                                       #
-        # [*]                                                                                            #
+        # MAIN ----------------------------------------------------------------------------------------------------------------------------------
 
         # if __name__ == "__main__":
         initialize()
 
-        # [i] Display History #
+        # ---------------------------- Display History ------------------------------------
         display_history_messages()
 
         if prompt := st.chat_input("Type your request..."):
 
-            # [*] Request & Response #
+            # ---------------------------- Request & Response ----------------------------
             display_user_msg(message=prompt)
-            assistant_response = st.session_state.chatbot.generate_response(
-                message=prompt
-            )
+            assistant_response = st.session_state.chatbot.generate_response(message=prompt)
             display_assistant_msg(message=assistant_response)
 
 
-        # [i] Sidebar #
+        # ----------------------------------- Sidebar -----------------------------------
         with st.sidebar:
             with st.expander("Information"):
                 if local_settings.OPENAI_API_KEY:
