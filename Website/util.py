@@ -13,6 +13,13 @@ from dotenv import find_dotenv, load_dotenv
 from pydantic_settings import BaseSettings
 from pydantic import Field
 from openai import OpenAI
+from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+
+# Google Calendar API ------------------------------------------------------------------------------------------------------------------------------------
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+service = build('calendar', 'v3', credentials=creds)
 
 
 # Settings --------------------------------------------------------------------------------------------------------------------------------------

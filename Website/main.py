@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-import home, account, chat, schedule, about
+import home, account, chat_4, schedule, about
 
 st.set_page_config(page_title="Doc-IT-Right", initial_sidebar_state="expanded")
 
@@ -41,7 +41,7 @@ multi_app = MultiApp()
 # Register apps
 multi_app.add_app("Home", home.app)
 multi_app.add_app("Account", account.app)
-multi_app.add_app("Chat", chat.app)
+multi_app.add_app("Chat", chat_4.app)
 multi_app.add_app("Schedules", schedule.app)
 multi_app.add_app("about", about.app)
 

@@ -1,107 +1,86 @@
 from openai import OpenAI
 from util import local_settings
 
-
 # OpenAI API ------------------------------------------------------------------------------------------------------------------------------------
-# class GPT_Helper:
-#     def __init__(self, OPENAI_API_KEY: str, system_behavior: str="", functions: list=None, model="gpt-3.5-turbo-1106"):
-#         self.client = OpenAI(api_key=OPENAI_API_KEY)
-#         self.messages = []
-#         self.model = model
+class GPT_Helper:
+    def __init__(self, OPENAI_API_KEY: str, system_behavior: str="", functions: list=None, model="gpt-3.5-turbo"): # function_call: list=None ,
+        self.client = OpenAI(api_key=OPENAI_API_KEY)
+        self.messages = []
+        self.model = model
 
-#         if system_behavior:
-#             self.messages.append({"role": "system", "content": system_behavior})
-#         if functions:
-#             self.functions = functions
+        if system_behavior:
+            self.messages.append({"role": "system", "content": system_behavior})
+        if functions:
+            print('yes func')
+            self.functions = functions
 
-#     # get completion from the model
-#     def get_completion(self, prompt, temperature=0):
+    # get completion from the model
+    def get_completion(self, prompt, temperature=0):
 
-#         self.messages.append({"role": "user", "content": prompt})
+        self.messages.append({"role": "user", "content": prompt})
 
-#         completion = self.client.chat.completions.create(
-#             model=self.model,
-#             messages=self.messages,
-#             temperature=temperature,
-#             tools=self.functions
-#         )
-
-#         self.messages.append({"role": "assistant", "content": str(completion.choices[0].message.content)})
-
-#         return completion.choices[0].message.content    
-
-
-
-# # ChatBot ---------------------------------------------------------------------------------------------------------------------------------------
-
-# class ChatBot:
-#     """
-#     Generate a response by using LLMs.
-#     """
-
-#     def __init__(self, system_behavior: str, functions: list=None):
-#         self.__system_behavior = system_behavior
-#         self.__functions = functions
-
-#         self.engine = GPT_Helper(
-#             OPENAI_API_KEY=local_settings.OPENAI_API_KEY,
-#             system_behavior=system_behavior,
-#             functions=functions
-#         )
-
-#     def generate_response(self, message: str):
-#         return self.engine.get_completion(message)
-
-#     def __str__(self):
-#         shift = "   "
-#         class_name = str(type(self)).split('.')[-1].replace("'>", "")
-
-#         return f"🤖 {class_name}."
-
-#     def reset(self):
-#         self.engine = GPT_Helper(
-#             OPENAI_API_KEY=local_settings.OPENAI_API_KEY,
-#             system_behavior=self.__system_behavior
-#     )
-
-#     @property
-#     def memory(self):
-#         return self.engine.messages
-
-#     @property
-#     def system_behavior(self):
-#         return self.__system_config
-
-#     @system_behavior.setter
-#     def system_behavior(self, system_config : str):
-#         self.__system_behavior = system_config
-
-
-GPT_MODEL = "gpt-3.5-turbo-0613"
-openai_api_key = local_settings.OPENAI_API_KEY
-
-# FUNCTION CALL INEXISTENTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-def chat_completion_request(messages, functions=None, function_call=None, model=GPT_MODEL):
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + openai_api_key,
-    }
-    json_data = {"model": model, "messages": messages}
-    if functions is not None:
-        json_data.update({"functions": functions})
-    if function_call is not None:
-        json_data.update({"function_call": function_call})
-    try:
-        response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
-            headers=headers,
-            json=json_data,
+        completion = self.client.chat.completions.create(
+            model=self.model,
+            messages=self.messages,
+            temperature=temperature,
+            tools=self.functions
         )
-        return response
-    except Exception as e:
-        print("Unable to generate ChatCompletion response")
-        print(f"Exception: {e}")
-        return e
+
+        if completion.choices[0].message.content:
+            print('there is content')
+            self.messages.append({"role": "assistant", "content": completion.choices[0].message.content})
+            print('appended')
+
+        return completion.choices[0].message  
+
+
+
+# ChatBot ---------------------------------------------------------------------------------------------------------------------------------------
+
+class ChatBot:
+    """
+    Generate a response by using LLMs.
+    """
+
+    def __init__(self, system_behavior: str, functions: list=None):
+        self.__system_behavior = system_behavior
+        self.__functions = functions
+
+        self.engine = GPT_Helper(
+            OPENAI_API_KEY=local_settings.OPENAI_API_KEY,
+            system_behavior=system_behavior,
+            functions=functions
+        )
+
+    def generate_response(self, message: str):
+        c = self.engine.get_completion(message)
+        print('generate response tb está bem')
+        return c
+
+    def __str__(self):
+        shift = "   "
+        class_name = str(type(self)).split('.')[-1].replace("'>", "")
+
+        return f"🤖 {class_name}."
+
+    def reset(self):
+        self.engine = GPT_Helper(
+            OPENAI_API_KEY=local_settings.OPENAI_API_KEY,
+            system_behavior=self.__system_behavior,
+            functions=self.__functions
+    )
+
+    @property
+    def memory(self):
+        return self.engine.messages
+
+    @property
+    def system_behavior(self):
+        return self.__system_config
+
+    @system_behavior.setter
+    def system_behavior(self, system_config : str):
+        self.__system_behavior = system_config
 
 
 # FUNCTIONS -------------------------------------------------------------------------------------------------------------------------------------
@@ -417,8 +396,8 @@ def appointment_reschedule(arguments):
 
 functions = [
     {
-        # "type": "function",
-        # "function": {
+        "type": "function",
+        "function": {
             "name": "appointment_booking",
             "description": "When user want to book appointment, then this function should be called.",
             "parameters": {
@@ -446,12 +425,12 @@ functions = [
                 },
                 "required": ["book_date","book_time","email_address", "doctor"],
             }
-        # }
+        }
     }, 
 
     {
-        # "type": "function",
-        # "function": {
+        "type": "function",
+        "function": {
             "name": "appointment_reschedule",
             "description": "When user want to reschedule appointment, then this function should be called.",
             "parameters": {
@@ -490,12 +469,12 @@ functions = [
             
                 "required": ["del_date","del_time","email_address","doctor","book_date","book_time"],
             }
-        # }
+        }
     },
 
     {
-        # "type": "function",
-        # "function": {
+        "type": "function",
+        "function": {
             "name": "appointment_delete",
             "description": "When user want to delete appointment, then this function should be called.",
             "parameters": {
@@ -518,63 +497,8 @@ functions = [
                 },
                 "required": ["del_date","del_time","email_address"],
             }
-        # }
-    }]
-
-# from typing import List
-
-# class Function:
-#     def __init__(self, name, description, parameters):
-#         self.name = name
-#         self.description = description
-#         self.parameters = parameters
-
-# functions: List[Function] = [
-#     Function(
-#         name="appointment_booking",
-#         description="When user wants to book an appointment, then this function should be called.",
-#         parameters={
-#             "type": "object",
-#             "properties": {
-#                 'doctor': {"type": "string", "description": "Doctor of preference"},
-#                 "book_date": {"type": "string", "format": "date", "description": "Date to book appointment"},
-#                 "book_time": {"type": "string", "format": "time", "description": "Time to book appointment"},
-#                 "email_address": {"type": "string", "description": "User's email address"},
-#             },
-#             "required": ["book_date", "book_time", "email_address", "doctor"],
-#         },
-#     ),
-#     Function(
-#         name="appointment_reschedule",
-#         description="When user wants to reschedule an appointment, then this function should be called.",
-#         parameters={
-#             "type": "object",
-#             "properties": {
-#                 "del_date": {"type": "string", "format": "date", "description": "Date of the existing appointment"},
-#                 "del_time": {"type": "string", "format": "time", "description": "Time of the existing appointment"},
-#                 "email_address": {"type": "string", "description": "User's email address"},
-#                 "doctor": {"type": "string", "description": "Doctor of preference for the new appointment"},
-#                 "book_date": {"type": "string", "format": "date", "description": "Date to reschedule appointment"},
-#                 "book_time": {"type": "string", "format": "time", "description": "Time to reschedule appointment"},
-#             },
-#             "required": ["del_date", "del_time", "email_address", "doctor", "book_date", "book_time"],
-#         },
-#     ),
-#     Function(
-#         name="appointment_delete",
-#         description="When user wants to delete an appointment, then this function should be called.",
-#         parameters={
-#             "type": "object",
-#             "properties": {
-#                 "del_date": {"type": "string", "format": "date", "description": "Date of the appointment to delete"},
-#                 "del_time": {"type": "string", "format": "time", "description": "Time of the appointment to delete"},
-#                 "email_address": {"type": "string", "description": "User's email address"},
-#             },
-#             "required": ["del_date", "del_time", "email_address"],
-#         },
-#     ),
-#     # Add more functions as needed
-# ]
+        }
+    },]
 
 
 # BOT ------------------------------------------------------------------------------------------------------------------------------------------
@@ -625,41 +549,25 @@ PROCESS:
 ATTENTION: Make sure to follow all the instructions carefully while processing any request. 
 """
 
-messages = [{"role": "system", "content": system_behavior}]
-        
-user_input = input("Please enter your question here: (if you want to exit then write 'exit' or 'bye'.) ")
 
-while user_input.strip().lower() != "exit" and user_input.strip().lower() != "bye":
-    
-    messages.append({"role": "user", "content": user_input})
-
-    # calling chat_completion_request to call ChatGPT completion endpoint
-    chat_response = chat_completion_request(
-        messages, functions=functions
-    )
-
-    # fetch response of ChatGPT and call the function
-    assistant_message = chat_response.json()["choices"][0]["message"]
-
-    if assistant_message['content']:
-        print("Response is: ", assistant_message['content'])
-        messages.append({"role": "assistant", "content": assistant_message['content']})
+chatbot = ChatBot(system_behavior, functions)
+# Testes
+prompt = input("Please enter your question here: (if you want to exit then write 'exit' or 'bye'.) ")
+while prompt.strip().lower() != "exit" and prompt.strip().lower() != "bye":
+    print('antes do response')
+    assistant_response = chatbot.generate_response(message=prompt)
+    print("A:", assistant_response.content)
+    if assistant_response.content:
+        print('B:', assistant_response.content)
     else:
-        fn_name = assistant_message["function_call"]["name"]
-        arguments = assistant_message["function_call"]["arguments"]
+        print('function call')
+        print(assistant_response.tool_calls)
+        fn_name = assistant_response.tool_calls[0].function.name
+        arguments = assistant_response.tool_calls[0].function.arguments
         function = locals()[fn_name]
         result = function(arguments)
-        print("Response is: ", result)
-       
-    user_input = input("Please enter your question here: ")
+        print("B: ", result)
 
-
-# chatbot = ChatBot(system_behavior, functions)
-# # Testes
-# prompt = input("Please enter your question here: (if you want to exit then write 'exit' or 'bye'.) ")
-# while prompt.strip().lower() != "exit" and prompt.strip().lower() != "bye":
-#     # assistant_response = chatbot.generate_response(message=prompt)
-#     print('B:', chatbot.generate_response(message=prompt))
-#     prompt = input("Y: ")
+    prompt = input("Y: ")
 
 
