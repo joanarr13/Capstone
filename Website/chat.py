@@ -111,7 +111,7 @@ def app():
         with st.sidebar:
             with st.expander("Information"):
                 if local_settings.OPENAI_API_KEY:
-                    st.write(f"🔑 Key loaded: { local_settings.OPENAI_API_KEY[0:6]}...")
+                    st.write(f"🔑 Key loaded: {local_settings.OPENAI_API_KEY[0:6]}...")
 
                 st.text("💬 MEMORY")
                 st.write(st.session_state.chatbot.memory)

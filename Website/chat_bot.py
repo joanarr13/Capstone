@@ -29,12 +29,7 @@ class GPT_Helper:
             temperature=temperature,
         )
 
-        self.messages.append(
-            {
-                "role": "assistant",
-                "content": completion.choices[0].message.content
-            }
-        )
+        self.messages.append({"role": "assistant", "content": completion.choices[0].message.content})
 
         return completion.choices[0].message.content
 
