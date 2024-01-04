@@ -19,13 +19,10 @@ class GPT_Helper:
         self.client = OpenAI(api_key=OPENAI_API_KEY)
         self.messages = []
         self.model = model
-        print('olá')
 
         #Langchain model
         self.embeddings = OpenAIEmbeddings()
-        print('embedis')
         self.document_searcher = FAISS.from_texts(meds_data, self.embeddings)
-        print('hihi')
         self.chain = load_qa_chain(langchain.llms.OpenAI(), chain_type="stuff")
       
         if system_behavior:
@@ -37,7 +34,6 @@ class GPT_Helper:
 
     def langchain_process(self, prompt):
         docs = self.document_searcher.similarity_search(prompt)
-        print('docs')
         result = self.chain.run(input_documents=docs, question=prompt)
         return result
     

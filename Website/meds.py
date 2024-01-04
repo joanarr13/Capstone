@@ -19,4 +19,3 @@ text_splitter = CharacterTextSplitter(
 
 
 meds_data = text_splitter.split_text(pdf_text) 
-print('meds')      

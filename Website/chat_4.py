@@ -13,7 +13,6 @@ from functions4 import functions
 from clinic_info import *
 
 def app():
-    print('app')
     if 'db' not in st.session_state:
         st.session_state.db = ''
 
@@ -376,9 +375,7 @@ def app():
 
         # MAIN ----------------------------------------------------------------------------------------------------------------------------------
         #if __name__ == "chat_4":
-        print('antes')
         initialize()
-        print('depois')
 
 
         # ---------------------------- Display History ------------------------------------

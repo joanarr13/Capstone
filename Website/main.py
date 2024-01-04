@@ -3,7 +3,6 @@ from streamlit_option_menu import option_menu
 import home, account, chat_4, schedule, about
 
 st.set_page_config(page_title="Doc-IT-Right", initial_sidebar_state="expanded")
-print('aqui')
 
 class MultiApp:
     def __init__(self):
