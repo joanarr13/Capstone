@@ -1,0 +1,5 @@
+- Patient Data Generator Prompt
+
+This link leads to the conversation where artificial patient data was created (150 different rows).
+
+https://chat.openai.com/share/5a74238c-95fe-4ef2-ae65-f3747ac4c505

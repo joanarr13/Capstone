@@ -1,0 +1,8 @@
+- Timetable Scheduling Prompt
+
+This prompt was used to create a balanced schedule for our virtual clinic.
+
+The output received was used to create a dictionary with the times available for which the patient's
+could schedule appointments for each doctor.
+
+https://chat.openai.com/share/4d11dc6c-bcd9-470e-bec8-57af58a8726c
