@@ -26,22 +26,19 @@ def app():
         st.text('Login to be able to use the chat!!')
 
     else:
-
         def initialize() -> None:
             """
             Initialize the app
             """
-
-
             with st.expander("Bot Configuration"):
                 selected_prompt = st.selectbox(label="Prompt", options=[prompt['name'] for prompt in prompts])
                 selected_prompt_dict = next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)
-                st.session_state.system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict["prompt"])
+                system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict["prompt"])
 
             st.sidebar.title("🤖 🥼")
 
             if "chatbot" not in st.session_state:
-                st.session_state.chatbot = ChatBot(st.session_state.system_behavior, functions)
+                st.session_state.chatbot = ChatBot(system_behavior, functions)
 
             with st.sidebar:
                 st.markdown(f"ChatBot in use: <font color='cyan'>{st.session_state.chatbot.__str__()}</font>", unsafe_allow_html=True)
@@ -96,7 +93,7 @@ def app():
 
 
         #-----------GLOBAL FUNCTIONS----------
-        def appointment_checking(start_date_time=None, end_date_time=None, timezone=None): #Good
+        def appointment_checking(start_date_time=None, end_date_time=None, timezone=None):
             try:
                 # Chech if given date is in the past
                 if start_date_time < datetime.now(timezone):
@@ -117,20 +114,20 @@ def app():
                     
                     else:
                         if start_date_time.time() >= limit1 and start_date_time.time() <= limit2:
-                            end_date_time = start_date_time + timedelta(hours=0.5)
+                            end_date_time = start_date_time + timedelta(minutes=30)
                             events_result = service.events().list(calendarId='primary', timeMin=start_date_time.isoformat(), timeMax=end_date_time.isoformat()).execute()
                             if events_result['items']:
                                 return "Sorry slot is not available."
                             else:
                                 return "The slot requested is available."
                         else:
-                            return "Please try to check an appointment within working hours, which is 9 AM to 7h30 PM."
+                            return "Please try to check an appointment within working hours, which is 9 AM to 8 PM."
             
             except:
                 return "We are facing some issues while processing your booking request, please try again."
 
 
-        def get_available_time_slots(doctor, day): # Good
+        def get_available_time_slots(doctor, day):
             # Function to get available time slots for a specific doctor on a given day
             doctor_schedule = doctor_time_tables.get(doctor, {}).get(day, {})
             
@@ -150,13 +147,15 @@ def app():
 
                 return available_times
             
-        def is_time_in_range(selected_time, times_list): # Good
+
+        def is_time_in_range(selected_time, times_list):
             for time_obj in times_list:
                 if time_obj == selected_time.strftime("%H:%M:%S"):
                     return "In time range"
             return "Not in time range"
 
-        def get_available_times_message(doctor, day, available_times): # Good
+
+        def get_available_times_message(doctor, day, available_times):
             if not available_times:
                 return f"{doctor} is not available on {day}."
             else:
@@ -182,10 +181,11 @@ def app():
                         return f"{doctor} is not available in the desiered schedule. {available_times_message} Please choose a valid schedule."
                     else:
                         return "Doctor and time are compatible."
+            else:
+                return "No doctor specified"
 
         #---------------BOOKING----------------
         def appointment_booking(arguments):
-            # print('yay')
             try:
                 # Handling the date and time
                 provided_date_str =  str(datetime.strptime(json.loads(arguments)['book_date'], "%Y-%m-%d").date())
@@ -202,14 +202,16 @@ def app():
                 
                 # Checking if the requested slot is available
                 if provided_date_str and provided_time_str and email_address and doctor:
-                    slot_checking = appointment_checking(start_date_time, end_date_time, timezone) 
+                    # Check if slot in clinics' working hours and slot is not already booked
+                    slot_checking = appointment_checking(start_date_time, end_date_time, timezone)
+                    # Checks if doctor is available at the given time
                     doc_checking = doctor_checking(start_date_time, doctor)
 
                     while doc_checking != "Doctor and time are compatible.":
                         return doc_checking        
 
                     while slot_checking != "The slot requested is available.":
-                        return slot_checking   
+                        return slot_checking
                 
                     if doc_checking == "Doctor and time are compatible." and slot_checking == "The slot requested is available.":        
             
@@ -242,7 +244,7 @@ def app():
                         return "Appointment added successfully."
                     
                     else:
-                        return "There has been a mismatch in compatibilities." # This should never happen
+                        return "The doctor is already fully booked for the day."
                         
                 else:
                     return "Please provide all necessary details: Date, time, email and doctor."
@@ -254,7 +256,7 @@ def app():
         def appointment_delete(arguments):
             try:
                 provided_date =  str(datetime.strptime(json.loads(arguments)['del_date'], "%Y-%m-%d").date())
-                provided_time = str(datetime.strptime(json.loads(arguments)['del_time'], "%H:%M:%S").time()) #.replace("PM","").replace("AM","").strip()
+                provided_time = str(datetime.strptime(json.loads(arguments)['del_time'], "%H:%M:%S").time())
                 email_address = json.loads(arguments)['email_address']
 
                 if provided_date and provided_time and email_address:
@@ -295,6 +297,7 @@ def app():
                 return "Appointments was found.", id
             else:
                 return "Your email is not assigned to any appointment. Please try again."
+            
             
         def appointment_reschedule(arguments):
             try:
@@ -372,9 +375,8 @@ def app():
 
 
         # MAIN ----------------------------------------------------------------------------------------------------------------------------------
-
-        # if __name__ == "__main__":
-        initialize()
+        if __name__ == "chat_4":
+            initialize()
 
         # ---------------------------- Display History ------------------------------------
         display_history_messages()
@@ -382,16 +384,22 @@ def app():
         if prompt := st.chat_input("Type your request..."):
 
             # ---------------------------- Request & Response ----------------------------
-            display_user_msg(message=prompt)
-            assistant_response = st.session_state.chatbot.generate_response(message=prompt)
-            if assistant_response.content:
-                display_assistant_msg(message=assistant_response.content)
+            if system == 'medicine':
+                display_user_msg(message=prompt)
+                assistant_response = st.session_state.chatbot.generate_response(message=prompt, langchain=True)
+                display_assistant_msg(message=assistant_response)
+
             else:
-                fn_name = assistant_response.tool_calls[0].function.name
-                arguments = assistant_response.tool_calls[0].function.arguments
-                function = locals()[fn_name]
-                result = function(arguments)
-                display_assistant_msg(message=result)
+                display_user_msg(message=prompt)
+                assistant_response = st.session_state.chatbot.generate_response(message=prompt)
+                if assistant_response.content:
+                    display_assistant_msg(message=assistant_response.content)
+                else:
+                    fn_name = assistant_response.tool_calls[0].function.name
+                    arguments = assistant_response.tool_calls[0].function.arguments
+                    function = locals()[fn_name]
+                    result = function(arguments)
+                    display_assistant_msg(message=result)
 
 
         # ----------------------------------- Sidebar -----------------------------------

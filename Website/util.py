@@ -15,11 +15,22 @@ from pydantic import Field
 from openai import OpenAI
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
+import firebase_admin
 
 # Google Calendar API ------------------------------------------------------------------------------------------------------------------------------------
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 service = build('calendar', 'v3', credentials=creds)
+
+# Firebase API ------------------------------------------------------------------------------------------------------------------------------------
+
+cred = firebase_admin.credentials.Certificate("doc-it-right-c4b0c-a8097b4fd708.json")
+try:
+    firebase_admin.get_app()
+    # print("Firebase app is already initialized.")
+except ValueError:
+    # Initialize the app if it hasn't been initialized yet
+    firebase_admin.initialize_app(cred)
 
 
 # Settings --------------------------------------------------------------------------------------------------------------------------------------

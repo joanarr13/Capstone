@@ -1,17 +1,7 @@
 import streamlit as st
-import firebase_admin
-from firebase_admin import firestore
-from firebase_admin import credentials
-from firebase_admin import auth
 from countries import hdi_dict
+from firebase_admin import firestore, auth
 
-cred = credentials.Certificate("doc-it-right-c4b0c-a8097b4fd708.json")
-try:
-    firebase_admin.get_app()
-    # print("Firebase app is already initialized.")
-except ValueError:
-    # Initialize the app if it hasn't been initialized yet
-    firebase_admin.initialize_app(cred)
 
 def app():
     st.title('Welcome to :blue[Doc-IT-Right] :lab_coat:')
@@ -24,13 +14,11 @@ def app():
     def f():
         try:
             user = auth.get_user_by_email(email)
-            # print(user.uid)
             st.session_state.username = user.uid
             st.session_state.useremail = user.email
             
             st.session_state.signedout = True
             st.session_state.signout = True    
-  
             
         except: 
             st.warning('Login Failed')

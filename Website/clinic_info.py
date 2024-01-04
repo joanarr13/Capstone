@@ -14,3 +14,14 @@ doctor_time_tables = {
     "Dr. Ângelo Rodrigues": {"wednesday": {'start': "09:00:00", 'end': "13:00:00"}, "friday": {'start': '18:00:00', 'end': "20:00:00"}},
     "Dr. José Dias": {"wednesday": {'start': "13:30:00", 'end': "17:30:00"}, "saturday": {'start': '09:00:00', 'end': "12:00:00"}},
 }
+
+doctor_to_ID = {
+    'Dr. João Santos': -1,
+    'Dr. Miguel Costa': 0,
+    'Dra. Sofia Pereira': 1,
+    'Dra. Mariana Chagas': 2,
+    'Dr. António Oliveira': 3,
+    'Dra. Inês Martins': 4,
+    'Dr. Ângelo Rodrigues': 5,
+    'Dr. José Dias': 6
+}
