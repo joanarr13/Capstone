@@ -1,0 +1,13 @@
+Company Definition Prompts
+
+- Company Name
+https://chat.openai.com/share/4b0f68c3-fe66-43f0-b6c9-18aaac179d58
+
+- Company's Problem, Value Proposition, Company Mission, Vision and Values
+https://chat.openai.com/share/4b0f68c3-fe66-43f0-b6c9-18aaac179d58
+
+- Company Tag Line
+https://chat.openai.com/share/59316540-92e0-4e89-88c8-503a91817ce8
+
+- Company Personas
+https://chat.openai.com/share/ba61dce7-c031-4015-843c-5e376d1f676e
