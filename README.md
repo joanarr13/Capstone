@@ -39,7 +39,7 @@ FALTAM AQUI COISAS
 <a name="rep_desc"></a>
 ## Repository Description
 This repository contains all the files created during the development of our project. In the following paragraphs will be a description of how the repository is organized and what each file contains:
-- [Prompts folder](Capstone/tree/master/Prompts): contains all the prompts 
+- [Prompts folder](Prompts): contains all the prompts 
 
 
 <a name="proj_use"></a>
