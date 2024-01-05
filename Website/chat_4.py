@@ -154,13 +154,24 @@ def app():
                 if time_obj == selected_time.strftime("%H:%M:%S"):
                     return "In time range"
             return "Not in time range"
+        
+
+        def available_doctor(strat_date_time):
+            available_doctors = []
+            day_of_week = strat_date_time.strftime("%A").lower()
+            for doctor in doctor_time_tables.keys():
+                doctor_schedule = get_available_time_slots(doctor, day_of_week)
+                in_doctor_slots = is_time_in_range(strat_date_time.time(), doctor_schedule) == "In time range"
+                if doctor_schedule and in_doctor_slots:
+                    available_doctors.append(doctor)
+            return available_doctors
 
 
         def get_available_times_message(doctor, day, available_times):
             if not available_times:
                 return f"{doctor} is not available on {day}."
             else:
-                return f"{doctor} is available on {day} at the following times: {', '.join(available_times)}."
+                return f"{doctor} is only available on {day}s at the following times: {', '.join(available_times)}. Please choose a valid schedule."
 
 
         def doctor_checking(start_date_time=None, doctor=None):
@@ -175,11 +186,12 @@ def app():
                     day_of_week = start_date_time.strftime("%A").lower()
                     doctor_schedule = get_available_time_slots(doctor, day_of_week)
                     in_doctor_slots = is_time_in_range(start_date_time.time(), doctor_schedule) == "In time range"
+                    available_doctors = available_doctor(start_date_time)
                     
                     if not doctor_schedule or not in_doctor_slots:
                         available_times_message = get_available_times_message(doctor, day_of_week, doctor_schedule)
                         
-                        return f"{doctor} is not available in the desiered schedule. {available_times_message} Please choose a valid schedule."
+                        return f"{available_times_message} The doctor{' available is' if len(available_doctors) == 1 else 's available are'}: {', '.join(available_doctors)}."
                     else:
                         return "Doctor and time are compatible."
             else:
@@ -254,12 +266,12 @@ def app():
                         model_dataframe = scaled_dataframe[feature_names].copy()
                         model_dataframe.rename(columns={'CountryofOriginHDI (Year-1)': 'CountryofOriginHDI'}, inplace=True)
                         prediction = model.predict(model_dataframe)
-                        prediction = float(prediction[0])
+                        prediction = 'show' if int(prediction[0]) == 0 else 'no-show'
 
                         event = {
                             'summary': doctor,
                             'location': "Lisbon",
-                            'description': f"This appointment was scheduled by the chatbot. And the no-show prediction is: {prediction}",
+                            'description': f"This appointment was scheduled by the chatbot. Prediction is: {prediction}",
                             
                             'start': {
                                 'dateTime': start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -283,7 +295,6 @@ def app():
                         }
                         ev = service.events().insert(calendarId='primary', body=event).execute()
                         id = ev['id']
-                        print(AppointmentWeekNumber, AppointmentDayOfMonth, AppointmentHour, WeekendConsults, WeekdayConsults, Adults, Children, Babies, AffiliatedPatient, PreviousAppointments, PreviousNoShows, LastMinutesLate, OnlineBooking, AppointmentChanges, BookingToConsultDays, ParkingSpaceBooked, SpecialRequests, NoInsurance, ExtraExamsPerConsult, DoctorAssigned, ConsultPriceEuros, PaidinAdvance, CountryofOriginHDI, prediction, st.session_state.username, id)
                         ap_data={'AppointmentWeekNumber':AppointmentWeekNumber,
                                  'AppointmentDayOfMonth': AppointmentDayOfMonth,
                                  'AppointmentHour': AppointmentHour,
@@ -294,7 +305,7 @@ def app():
                                  'DoctorAssigned':DoctorAssigned,
                                  'ConsultPriceEuros':ConsultPriceEuros,
                                  '%PaidinAdvance':PaidinAdvance,
-                                 'NoShow':prediction,
+                                 'NoShow':'show' if prediction == 0 else 'no-show',
                                  'Username':st.session_state.username,
                                  'id':id
                                  }
@@ -359,6 +370,7 @@ def app():
 
             if final_event:
                 id = final_event['id']
+                print('AAAAAAAAAAAAAAAAAAAAAAAAAA')
                 return "Appointments was found.", id
             else:
                 return "Your email is not assigned to any appointment. Please try again."
@@ -446,12 +458,12 @@ def app():
                             model_dataframe = scaled_dataframe[feature_names].copy()
                             model_dataframe.rename(columns={'CountryofOriginHDI (Year-1)': 'CountryofOriginHDI'}, inplace=True)
                             prediction = model.predict(model_dataframe)
-                            prediction = float(prediction[0])
+                            prediction = 'show' if int(prediction[0]) == 0 else 'no-show'
 
                             event = {
                                 'summary': doctor,
                                 'location': "Lisbon",
-                                'description': f"This appointment was scheduled by the chatbot. And the no-show prediction is: {prediction}",
+                                'description': f"This appointment was scheduled by the chatbot. Prediction is: {prediction}",
                                 
                                 'start': {
                                     'dateTime': new_start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -505,8 +517,10 @@ def app():
                 else:
                     return "Please provide all necessary details:  Appointment date and Appointment for the new and original appointments, time, doctor, parking space requirement, special requests and paid in advance amount."
         
-            except:
-                return "We are enable to process. Please try again."
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                return "We are unable to process. Please try again."
             
 
 
