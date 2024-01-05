@@ -1,7 +1,9 @@
-In our project we used different 2 different main datasets.
+In our project we used different 2 different main datasets, which later on originated two others.
 
 For the predictive model: 
-- `no_show` dataset: (https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand)
+- `no_show` dataset: a dataset which was originally on hotel bookings cancellation and it was retrieved from kaggle (https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand).
+The names of the columns were changed to be more compatible with the topic of our project.
+
     METADATA OF `no_show`:
         - `AppointmentID`: Unique identifier of each appointment
         - `AppointmentYear`: Year of the appointment
@@ -21,14 +23,14 @@ For the predictive model:
         - `LastMinutesLate`: Number of minutes that the patient arrived late for the appointment
         - `OnlineBooking`: Boolean feature worth 1 in the case of the appointment was booked online
         - `AppointmentChanges`: Boolean feature worth 1 in the case of that the appointment has suffered changes from its initial state/booking
-        - `BookingToConsultDays`: 
+        - `BookingToConsultDays`: Number of days from the day in which the appointment was booked to the actual day of the appointment
         - `ParkingSpaceBooked`: Boolean feature worth 1 in the case the patient required for a parking space for the duration of the appointment
-        - `SpecialRequests`:
+        - `SpecialRequests`: Boolean feature worth 1 if the patient made special requests
         - `NoInsurance`: Boolean feature worth 1 in case the patient has insurance`
-        - `CompanyReservation`:
+        - `CompanyReservation`: Boolean feature worth 1 if the appointment was made under the name of a company
         - `ExtraExamsPerConsult`: Number of extra exams that the appointment required
-        - `DoctorRequested`: 
-        - `DoctorAssigned`: 
+        - `DoctorRequested`: ID of the doctor the patient requested
+        - `DoctorAssigned`: ID of the doctor the patient was assigned
         - `ConsultPriceEuros`: Price to pay for the appointment in euros
         - `ConsultPriceUSD`: Price to pay for appointment in USD
         - `%PaidinAdvance`: Percentage of the total cost of the appointment that was paid in advance
@@ -37,9 +39,9 @@ For the predictive model:
         - `CountryofOriginHDI`: Human-Development-Index (HDI) for the country of origin of the patient
         - `NoShow`: Target variable which indicates whether the patient showed up to the appointment or missed it
 
-- `appointments`: 
+- `appointments`: This dataset is a small portion of the `no_show` dataset. Only 150 rows were selected, in order to match the number of wors in the `patients`dataset.
+
     METADATA OF `appointments`:
-        - APPOINTMENT ID???? 
         - `AppointmentWeekNumber`: Week Number of the appointment (range from 0 to 52)
         - `AppointmentDayOfMonth`: Day of the month of the appointment (range from 1-31)
         - `AppointmentHour`: Hour of the appointment (range from 9-20h)
@@ -54,12 +56,12 @@ For the predictive model:
         - `LastMinutesLate`: Number of minutes that the patient arrived late for the appointment
         - `OnlineBooking`: Boolean feature worth 1 in the case of the appointment was booked online
         - `AppointmentChanges`: Boolean feature worth 1 in the case of that the appointment has suffered changes from its initial state/booking
-        - `BookingToConsultDays`:
+        - `BookingToConsultDays`: Number of days from the day in which the appointment was booked to the actual day of the appointment
         - `ParkingSpaceBooked`: Boolean feature worth 1 in the case the patient required for a parking space for the duration of the appointment
-        - `SpecialRequests`:
+        - `SpecialRequests`: Boolean feature worth 1 if the patient made special requests
         - `NoInsurance`: Boolean feature worth 1 in case the patient has insurance`
         - `ExtraExamsPerConsult`: Number of extra exams that the appointment required
-        - `DoctorAssigned`:
+        - `DoctorAssigned`: ID of the doctor the patient was assigned
         - `ConsultPriceEuros`: Price to pay for the appointment in euros
         - `%PaidinAdvance`: Percentage of the total cost of the appointment that was paid in advance
         - `CountryofOriginHDI`: Human-Development-Index (HDI) for the country of origin of the patient
@@ -95,3 +97,6 @@ For the chabot:
         - `NoInsurance`: Boolean feature worth 1 in case the patient has insurance
         - `ExtraExamsPerConsult`: Number of extra exams that the appointment required
         - `CountryofOriginHDI`: Human-Development-Index (HDI) for the country of origin of the patient
+
+
+- HDI is an additional dataset which contains the values of HDI for each country in the world and whose values were then mapped to the `no_show`dataset.
