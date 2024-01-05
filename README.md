@@ -39,7 +39,13 @@ FALTAM AQUI COISAS
 <a name="rep_desc"></a>
 ## Repository Description
 This repository contains all the files created during the development of our project. In the following paragraphs will be a description of how the repository is organized and what each file contains:
-- [Prompts folder](Prompts): contains all the prompts 
+- [Prompts folder](Prompts): contains all the links that lead to the chats where the prompts were fed into the LLM (in our case, ChatGPT) to obtain - company definition (company name, problem, value proposition, core values, mission, vision, tag line, personas), marketing prompts (discussion of pros and cons of reviews from competitor companies, blog posts creation, pitch script, 5-post social media campaign, Instagram post captions), timetable scheduling prompt and patient data generator prompt.
+- [Data Description](data_description.txt): this text file contains the description and the metadata of all the used data in our project.
+- [Git Ignore](.gitignore): this is a file that specifies patterns of files and directories that should be excluded from the version control of our repository.
+- [README](Capstone/README.md): README file
+
+  
+FALTA AQUI A DESCRIÇÃO DOS FOLDERS DO CÓDIGO E DAQUELES QUE ELE QUER COM PROMPTS DO NOSSO MODELO MESMO
 
 
 <a name="proj_use"></a>
