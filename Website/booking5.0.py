@@ -247,33 +247,37 @@ def appointment_booking(arguments):
                 return doc_checking        
             while slot_checking != "The slot requested is available.":
                 return slot_checking
-        
+
+            patient_data = db.collection('Patients').document(st.session_state.username).get()
+            patient_data_dict = patient_data.to_dict()
+
             if doc_checking == "Doctor and time are compatible." and slot_checking == "The slot requested is available.":        
                 AppointmentWeekNumber = int(start_date_time.strftime("%U"))
                 AppointmentDayOfMonth = int(start_date_time.strftime("%d"))
                 AppointmentHour = start_date_time.time().hour + start_date_time.time().minute / 60 + start_date_time.time().second / 3600
-                WeekendConsults = 0 #ir buscar
-                WeekdayConsults = 0 #ir buscar
-                Adults = 3 #ir buscar
-                Children = 1.0 #ir buscar e transformar em float
-                Babies = 0 #ir buscar
-                AffiliatedPatient = 1 #ir buscar
-                PreviousAppointments = 3 #ir buscar
-                PreviousNoShows = 1 #ir buscar
-                LastMinutesLate = 2 #ir buscar
+                WeekendConsults = patient_data_dict["WeekendConsults"]
+                WeekdayConsults = patient_data_dict["WeekdayConsults"]
+                Adults = patient_data_dict["Adults"]
+                Children = float(patient_data_dict["Children"])
+                Babies = patient_data_dict["Babies"]
+                AffiliatedPatient = patient_data_dict["AffiliatedPatient"]
+                PreviousAppointments = patient_data_dict["PreviousAppointments"]
+                PreviousNoShows = patient_data_dict["PreviousNoShows"]
+                LastMinutesLate = patient_data_dict["LastMinutesLate"]
                 OnlineBooking = 1 
                 AppointmentChanges = 0 # ALTERAR NO RESCHEDULE!!!!!!!!!!!!!!!!!!
                 time_difference = start_date_time.date() - datetime.today().date()
                 BookingToConsultDays = time_difference.days
                 ParkingSpaceBooked = parking_spaces
                 SpecialRequests = special_requests
-                NoInsurance = 0 #ir buscar
-                ExtraExamsPerConsult = 2 #ir buscar
+                NoInsurance = patient_data_dict["NoInsurance"]
+                ExtraExamsPerConsult = patient_data_dict["ExtraExamsPerConsult"]
                 DoctorAssigned = doctor_to_ID.get(doctor, None)
                 ConsultPriceEuros = 30.0
-                PayInAdvance = pay_in_advance/100
-                CountryofOriginHDI = 0.851 #ir buscar
-                model_data = np.array([[0,AppointmentWeekNumber,AppointmentDayOfMonth,AppointmentHour,WeekendConsults,WeekdayConsults,Adults,Children,Babies,0,AffiliatedPatient,PreviousAppointments,0,PreviousNoShows,LastMinutesLate,OnlineBooking,AppointmentChanges,BookingToConsultDays,ParkingSpaceBooked,SpecialRequests,NoInsurance,ExtraExamsPerConsult,0,DoctorAssigned,ConsultPriceEuros,0,PayInAdvance,0,0,CountryofOriginHDI]])
+                PaidinAdvance = pay_in_advance/100
+                CountryofOriginHDI = patient_data_dict["CountryofOriginHDI"]
+
+                model_data = np.array([[0,AppointmentWeekNumber,AppointmentDayOfMonth,AppointmentHour,WeekendConsults,WeekdayConsults,Adults,Children,Babies,0,AffiliatedPatient,PreviousAppointments,0,PreviousNoShows,LastMinutesLate,OnlineBooking,AppointmentChanges,BookingToConsultDays,ParkingSpaceBooked,SpecialRequests,NoInsurance,ExtraExamsPerConsult,0,DoctorAssigned,ConsultPriceEuros,0,PaidinAdvance,0,0,CountryofOriginHDI]])
                 dataframe_scaler = pd.DataFrame(model_data, columns=features_scaler)
                 scaled_data = scaler.transform(dataframe_scaler)
                 scaled_dataframe = pd.DataFrame(scaled_data, columns=features_scaler)
@@ -284,7 +288,7 @@ def appointment_booking(arguments):
                 event = {
                     'summary': doctor,
                     'location': "Lisbon",
-                    'description': f"This appointment was scheduled by the chatbot. And the prediction is: {prediction}",
+                    'description': f"This appointment was scheduled by the chatbot. And the no-show prediction is: {prediction}",
                     'start': {
                         'dateTime': start_date_time.strftime("%Y-%m-%dT%H:%M:%S"),
                         'timeZone': 'Europe/Lisbon',
@@ -305,7 +309,33 @@ def appointment_booking(arguments):
                         ]
                     }
                 }
-                service.events().insert(calendarId='primary', body=event).execute()
+                ev = service.events().insert(calendarId='primary', body=event).execute()
+                id = ev['id']
+
+                ap_data={'AppointmentWeekNumber':AppointmentWeekNumber,
+                          'AppointmentDayOfMonth': AppointmentDayOfMonth,
+                          'AppointmentHour': AppointmentHour,
+                          'OnlineBooking':OnlineBooking,
+                          'AppointmentChanges':AppointmentChanges,
+                          'BookingToConsultDays':BookingToConsultDays,
+                          'ParkingSpaceBooked':ParkingSpaceBooked,
+                          'DoctorAssigned':DoctorAssigned,
+                          'ConsultPriceEuros':ConsultPriceEuros,
+                          '%PaidinAdvance':PaidinAdvance,
+                          'NoShow':prediction,
+                          'Username':st.session_state.username,
+                          'id':id
+                          }
+                
+                db.collection('Appointments').document(id).set(ap_data)
+
+                update_data = {"WeekendConsults": WeekendConsults + 1 if start_date_time.strftime("%A") == "Saturday" else WeekendConsults,
+                               "WeekdayConsults": WeekdayConsults + 1 if start_date_time.strftime("%A") != "Saturday" else WeekdayConsults,
+                               "PreviousAppointments": PreviousAppointments + 1
+                               } 
+                
+                db.collection('Patients').document(st.session_state.username).update(update_data)
+
                 return "Appointment added successfully."
             
             else:
@@ -341,6 +371,7 @@ def appointment_delete(arguments):
                             id = event['id']
                 if id:
                     service.events().delete(calendarId='primary', eventId=id).execute()
+                    db.collection('Appointments').document(id).delete()
                     return "Appointment deleted successfully."
                 else:
                     return "No registered event found on your id."
@@ -382,8 +413,11 @@ def appointment_reschedule(arguments):
 
         email_address = json.loads(arguments)['email_address']
         doctor = json.loads(arguments)['doctor']
+        parking_spaces = json.loads(arguments)['book_parking']
+        special_requests = json.loads(arguments)['book_special_requests']
+        pay_in_advance = json.loads(arguments)['book_pay_in_advance']
         
-        check, id = check_event(email_address, original_start_date_time)
+        check, original_id = check_event(email_address, original_start_date_time)
 
         if original_date_str and original_time_str and email_address and doctor:
             
@@ -400,6 +434,51 @@ def appointment_reschedule(arguments):
                     return slot_checking 
                 
                 if doc_checking == "Doctor and time are compatible." and slot_checking == "The slot requested is available.":
+
+                    patient_data = db.collection('Patients').document(st.session_state.username).get()
+                    patient_data_dict = patient_data.to_dict()
+                    appointment_data = db.collection('Appointments').document(original_id).get()
+                    appointment_data_dict = appointment_data.to_dict()
+
+                    AppointmentWeekNumber = int(new_start_date_time.strftime("%U"))
+                    AppointmentDayOfMonth = int(new_start_date_time.strftime("%d"))
+                    AppointmentHour = new_start_date_time.time().hour + new_start_date_time.time().minute / 60 + new_start_date_time.time().second / 3600
+                    if new_start_date_time.strftime("%A") == "Saturday" and original_start_date_time.strftime("%A") != "Saturday":
+                        WeekendConsults = patient_data_dict["WeekendConsults"] + 1
+                        WeekdayConsults = patient_data_dict["WeekdayConsults"] - 1
+                    elif new_start_date_time.strftime("%A") != "Saturday" and original_start_date_time.strftime("%A") == "Saturday":
+                        WeekendConsults = patient_data_dict["WeekendConsults"] - 1
+                        WeekdayConsults = patient_data_dict["WeekdayConsults"] + 1
+                    else:
+                        WeekendConsults = patient_data_dict["WeekendConsults"]
+                        WeekdayConsults = patient_data_dict["WeekdayConsults"]
+                    Adults = patient_data_dict["Adults"]
+                    Children = float(patient_data_dict["Children"])
+                    Babies = patient_data_dict["Babies"]
+                    AffiliatedPatient = patient_data_dict["AffiliatedPatient"]
+                    PreviousAppointments = patient_data_dict["PreviousAppointments"]
+                    PreviousNoShows = patient_data_dict["PreviousNoShows"]
+                    LastMinutesLate = patient_data_dict["LastMinutesLate"]
+                    OnlineBooking = 1 
+                    AppointmentChanges = appointment_data_dict['AppointmentChanges'] + 1
+                    time_difference = new_start_date_time.date() - datetime.today().date()
+                    BookingToConsultDays = time_difference.days
+                    ParkingSpaceBooked = parking_spaces
+                    SpecialRequests = special_requests
+                    NoInsurance = patient_data_dict["NoInsurance"]
+                    ExtraExamsPerConsult = patient_data_dict["ExtraExamsPerConsult"]
+                    DoctorAssigned = doctor_to_ID.get(doctor, None)
+                    ConsultPriceEuros = 30.0
+                    PaidinAdvance = pay_in_advance/100
+                    CountryofOriginHDI = patient_data_dict["CountryofOriginHDI"]
+
+                    model_data = np.array([[0,AppointmentWeekNumber,AppointmentDayOfMonth,AppointmentHour,WeekendConsults,WeekdayConsults,Adults,Children,Babies,0,AffiliatedPatient,PreviousAppointments,0,PreviousNoShows,LastMinutesLate,OnlineBooking,AppointmentChanges,BookingToConsultDays,ParkingSpaceBooked,SpecialRequests,NoInsurance,ExtraExamsPerConsult,0,DoctorAssigned,ConsultPriceEuros,0,PaidinAdvance,0,0,CountryofOriginHDI]])
+                    dataframe_scaler = pd.DataFrame(model_data, columns=features_scaler)
+                    scaled_data = scaler.transform(dataframe_scaler)
+                    scaled_dataframe = pd.DataFrame(scaled_data, columns=features_scaler)
+                    model_dataframe = scaled_dataframe[feature_names]
+                    model_dataframe.rename(columns={'CountryofOriginHDI (Year-1)': 'CountryofOriginHDI'}, inplace=True)
+                    prediction = model.predict(model_dataframe)
 
                     event = {
                         'summary': doctor,
@@ -426,8 +505,31 @@ def appointment_reschedule(arguments):
                             ]
                         }
                     }
-                    service.events().delete(calendarId='primary', eventId=id).execute()
-                    service.events().insert(calendarId='primary', body=event).execute()
+                    service.events().delete(calendarId='primary', eventId=original_id).execute()
+                    db.collection('Appointments').document(original_id).delete()
+                    ev = service.events().insert(calendarId='primary', body=event).execute()
+                    new_id = ev['id']
+
+                    data={'AppointmentWeekNumber':AppointmentWeekNumber,
+                          'AppointmentDayOfMonth': AppointmentDayOfMonth,
+                          'AppointmentHour': AppointmentHour,
+                          'OnlineBooking':OnlineBooking,
+                          'AppointmentChanges':AppointmentChanges,
+                          'BookingToConsultDays':BookingToConsultDays,
+                          'ParkingSpaceBooked':ParkingSpaceBooked,
+                          'DoctorAssigned':DoctorAssigned,
+                          'ConsultPriceEuros':ConsultPriceEuros,
+                          '%PaidinAdvance':PaidinAdvance,
+                          'NoShow':prediction,
+                          'Username':st.session_state.username,
+                          'id':new_id
+                          }
+                    db.collection('Appointments').document(new_id).set(data)
+
+                    update_data = {"WeekendConsults": WeekendConsults,
+                                "WeekdayConsults": WeekdayConsults
+                                } 
+                    db.collection('Patients').document(st.session_state.username).update(update_data)
 
                     return "Appointment rescheduled successfully."
             else:

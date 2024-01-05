@@ -5,13 +5,7 @@ ChatBot classes
 
 import random
 from openai import OpenAI
-import langchain.llms 
-from langchain.vectorstores import FAISS
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.chains.question_answering import load_qa_chain
-from meds import meds_data
 from util import local_settings
-
 
 # OpenAI API ------------------------------------------------------------------------------------------------------------------------------------
 class GPT_Helper:
@@ -20,17 +14,11 @@ class GPT_Helper:
         self.messages = []
         self.model = model
 
-        #Langchain model
-        self.embeddings = OpenAIEmbeddings()
-        self.document_searcher = FAISS.from_texts(meds_data, self.embeddings)
-        self.chain = load_qa_chain(langchain.llms.OpenAI(), chain_type="stuff")
-      
         if system_behavior:
             self.messages.append({"role": "system", "content": system_behavior})
 
         if functions:
             self.functions = functions
-
 
     def langchain_process(self, prompt):
         docs = self.document_searcher.similarity_search(prompt)
@@ -48,12 +36,11 @@ class GPT_Helper:
             model=self.model,
             messages=self.messages,
             temperature=temperature,
-            tools=self.functions)
-
+            tools=self.functions
+        )
             if completion.choices[0].message.content:
                 self.messages.append({"role": "assistant", "content": completion.choices[0].message.content})
-                
-            return completion.choices[0].message
+                return completion.choices[0].message
 
         else:
            langchain_results = self.langchain_process(prompt)
@@ -80,7 +67,7 @@ class ChatBot:
         )
 
     def generate_response(self, message: str, langchain=False):
-        return self.engine.get_completion(message, langchain = langchain)
+        return self.engine.get_completion(message, langchain=langchain)
 
     def __str__(self):
         shift = "   "
