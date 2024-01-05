@@ -4,7 +4,7 @@ Company Definition Prompts
 https://chat.openai.com/share/4b0f68c3-fe66-43f0-b6c9-18aaac179d58
 
 - Company's Problem, Value Proposition, Company Mission, Vision and Values
-https://chat.openai.com/share/4b0f68c3-fe66-43f0-b6c9-18aaac179d58
+https://chat.openai.com/share/bdcd7dd2-d48e-4397-8b4f-aabc90b8aaff
 
 - Company Tag Line
 https://chat.openai.com/share/59316540-92e0-4e89-88c8-503a91817ce8
