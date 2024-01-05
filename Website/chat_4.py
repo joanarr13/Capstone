@@ -313,9 +313,7 @@ def app():
                 else:
                     return "Please provide all necessary details: Date, time, email, doctor, parking space requirement, special requests and paid in advance amount."
             
-            except Exception as e:
-                import traceback
-                traceback.print_exc()
+            except:
                 return "We are facing an error while processing your request. Please try again."
 
         #---------------CANCEL----------------

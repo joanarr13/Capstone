@@ -21,9 +21,9 @@ class GPT_Helper:
         self.model = model
 
         #Langchain model
-        self.embeddings = OpenAIEmbeddings()
-        self.document_searcher = FAISS.from_texts(meds_data, self.embeddings)
-        self.chain = load_qa_chain(langchain.llms.OpenAI(), chain_type="stuff")
+        # self.embeddings = OpenAIEmbeddings()
+        # self.document_searcher = FAISS.from_texts(meds_data, self.embeddings)
+        # self.chain = load_qa_chain(langchain.llms.OpenAI(), chain_type="stuff")
       
         if system_behavior:
             self.messages.append({"role": "system", "content": system_behavior})
@@ -52,7 +52,7 @@ class GPT_Helper:
 
             if completion.choices[0].message.content:
                 self.messages.append({"role": "assistant", "content": completion.choices[0].message.content})
-                
+
             return completion.choices[0].message
 
         else:

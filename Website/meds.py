@@ -2,7 +2,6 @@ import PyPDF2
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 
-
 pdf_data = PdfReader("C:\\Users\\ritaf\\Documents\\ESTUDOS\\NOVA IMS\\3º Ano\\Capstone Project\\Projeto\\meds.pdf")
 pdf_text = ""
 
@@ -17,17 +16,4 @@ text_splitter = CharacterTextSplitter(
     chunk_overlap = 100
 )
 
-import sys, os
-
-# Disable
-def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
-
-# Restore
-def enablePrint():
-    sys.stdout = sys.__stdout__
-
-blockPrint()
 meds_data = text_splitter.split_text(pdf_text)
-enablePrint()
-
