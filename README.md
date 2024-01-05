@@ -25,7 +25,7 @@ Our mission is to guarantee that clinics can deliver the best possible service t
 This way, and in a country where there is such a great qualified labour but not so much quantity of it, we aim to get the best out of the available workforce, challenging them into new, more rewarding tasks, and manage them into success and contentment of patients that can, in this way, have better medical care and see their doubts quickly resolved.
 
 <a name="main_tech"></a>
-### What main technologies were used in the development of this project?
+### - What main technologies were used in the development of this project?
 For this project, the main goal was to create an AI-powered Question Answer System which would engage with fictional customers - in our case patients of medical clinics. This would be the primary communication channel of our business - being able to offer services to customers (answering patient's medical specialities, as well as their medication doubts; giving the predictions of which appointments are more likely to be missed to clinics) through a conversational app. 
 
 With this project, we were able to explore more in-depth how to make use of LLM models in different problems, as well as we learned how to create ... (FALTAM AQUI COISAS)
@@ -33,24 +33,28 @@ With this project, we were able to explore more in-depth how to make use of LLM 
 Overall, in the process of development of our project, we used LLM's from OpenAI, Python was the chosen programming language. Additionally, our chatbot was applied, and further on deployed, on a streamlit app. Finally, the company's website was done using WIX.
 
 <a name="main_chal"></a>
-### What were the main challenges faced? 
+### - What were the main challenges faced? 
 FALTAM AQUI COISAS
 
 <a name="rep_desc"></a>
 ## Repository Description
-This repository contains all the files ...
+This repository contains all the files created during the development of our project. In the following paragraphs will be a description of how the repository is organized and what each file contains:
+- [Prompts folder](Capstone/tree/master/Prompts): contains all the prompts 
+
 
 <a name="proj_use"></a>
 ## How To Use the Project. How to Install and Run the Project
 (FALTAM AQUI COISAS)
 
 <a name="credits"></a>
+## 
 #### Project Developed by:
 - Bruna Faria | 20211529@novaims.unl.pt  
 - Catarina Oliveira | 20211616@novaims.unl.pt  
 - Inês Vieira | 20211589@novaims.unl.pt 
 - Joana Rosa | 20211516@novaims.unl.pt  
 - Rita Centeno | 20211579@novaims.unl.pt
+##
 
 <a name="license"></a>
-## LICENSE (FALTA ESCOLHERMOS ISTO!!!
+## LICENSE (FALTA ESCOLHERMOS ISTO!!!)
