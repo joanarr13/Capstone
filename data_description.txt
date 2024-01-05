@@ -1,0 +1,97 @@
+In our project we used different 2 different main datasets.
+
+For the predictive model: 
+- `no_show` dataset: (https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand)
+    METADATA OF `no_show`:
+        - `AppointmentID`: Unique identifier of each appointment
+        - `AppointmentYear`: Year of the appointment
+        - `AppointmentMonth`: Month of the appointment (range from 1-12)
+        - `AppointmentWeekNumber`: Week Number of the appointment (range from 0 to 52)
+        - `AppointmentDayOfMonth`: Day of the month of the appointment (range from 1-31)
+        - `AppointmentHour`: Hour of the appointment (range from 9-20h)
+        - `WeekendConsults`: Number of Appointments that the patient has scheduled for the weekend days
+        - `WeekdayConsults`: Number of Appointments that the patient has scheduled for the weekdays
+        - `Adults`: Number of adults registered for the appointment
+        - `Children`: Number of children registered for the appointment
+        - `Babies`: Number of babies registered for the appointment
+        - `FirstTimePatient`: Boolean feature worth 1 in case of it being the patient's first appointment in the clinic
+        - `AffiliatedPatient`: Boolean feature worth 1 in case the patient is affiliate to the clinic
+        - `PreviousAppointments`: Number of previous appointments that customer has scheduled
+        - `PreviousNoShows`: Number of previous appointments that the patient has booked and then missed
+        - `LastMinutesLate`: Number of minutes that the patient arrived late for the appointment
+        - `OnlineBooking`: Boolean feature worth 1 in the case of the appointment was booked online
+        - `AppointmentChanges`: Boolean feature worth 1 in the case of that the appointment has suffered changes from its initial state/booking
+        - `BookingToConsultDays`: 
+        - `ParkingSpaceBooked`: Boolean feature worth 1 in the case the patient required for a parking space for the duration of the appointment
+        - `SpecialRequests`:
+        - `NoInsurance`: Boolean feature worth 1 in case the patient has insurance`
+        - `CompanyReservation`:
+        - `ExtraExamsPerConsult`: Number of extra exams that the appointment required
+        - `DoctorRequested`: 
+        - `DoctorAssigned`: 
+        - `ConsultPriceEuros`: Price to pay for the appointment in euros
+        - `ConsultPriceUSD`: Price to pay for appointment in USD
+        - `%PaidinAdvance`: Percentage of the total cost of the appointment that was paid in advance
+        - `CountryofOriginAvgIncomeEuros (Year-2)`: Average income of the country of origin of the patient (in the second year of the data)
+        - `CountryofOriginAvgIncomeEuros (Year-1)`: Average income of the country of origin of the patient (in the first year of the data)
+        - `CountryofOriginHDI`: Human-Development-Index (HDI) for the country of origin of the patient
+        - `NoShow`: Target variable which indicates whether the patient showed up to the appointment or missed it
+
+- `appointments`: 
+    METADATA OF `appointments`:
+        - APPOINTMENT ID???? 
+        - `AppointmentWeekNumber`: Week Number of the appointment (range from 0 to 52)
+        - `AppointmentDayOfMonth`: Day of the month of the appointment (range from 1-31)
+        - `AppointmentHour`: Hour of the appointment (range from 9-20h)
+        - `WeekendConsults`: Number of Appointments that the patient has scheduled for the weekend days
+        - `WeekdayConsults`: Number of Appointments that the patient has scheduled for the weekdays
+        - `Adults`: Number of adults registered for the appointment
+        - `Children`: Number of children registered for the appointment
+        - `Babies`: Number of babies registered for the appointment
+        - `AffiliatedPatient`: Boolean feature worth 1 in case the patient is affiliate to the clinic
+        - `PreviousAppointments`: Number of previous appointments that customer has scheduled
+        - `PreviousNoShows`: Number of previous appointments that the patient has booked and then missed
+        - `LastMinutesLate`: Number of minutes that the patient arrived late for the appointment
+        - `OnlineBooking`: Boolean feature worth 1 in the case of the appointment was booked online
+        - `AppointmentChanges`: Boolean feature worth 1 in the case of that the appointment has suffered changes from its initial state/booking
+        - `BookingToConsultDays`:
+        - `ParkingSpaceBooked`: Boolean feature worth 1 in the case the patient required for a parking space for the duration of the appointment
+        - `SpecialRequests`:
+        - `NoInsurance`: Boolean feature worth 1 in case the patient has insurance`
+        - `ExtraExamsPerConsult`: Number of extra exams that the appointment required
+        - `DoctorAssigned`:
+        - `ConsultPriceEuros`: Price to pay for the appointment in euros
+        - `%PaidinAdvance`: Percentage of the total cost of the appointment that was paid in advance
+        - `CountryofOriginHDI`: Human-Development-Index (HDI) for the country of origin of the patient
+        - `Username`: Username chosen by the patient
+
+
+For the chabot:
+- `customer_data`: Obtained from a conversation with a LLM model (https://chat.openai.com/share/5a74238c-95fe-4ef2-ae65-f3747ac4c505), which provided data regarding customers.
+    METADATA OF `customer_data`:
+        - `PatientID`: Unique Identifier of the Patient
+        - `FirstName`:First Name of the Patient
+        - `LastName`: Last Name of the Patient
+        - `Email`: Email of the Patient
+        - `Age`: Age of the Patient
+        - `Username`: Username chosen by the Patient
+
+- `patients`: Results from a combination of the data obtained from the conversation with the LLM model (´customer_data`) and the data from the dataset for the predictive model (only the variables related with the patient/person were retrieved into this new dataset)
+    METADATA OF `patients`:
+        - `FirstName`: First Name of the patient
+        - `LastName`: Last Name of the patient
+        - `Email`: Email of the patient
+        - `Age`: Age of the patient
+        - `Username`: Username chosen by the patient
+        - `WeekendConsults`: Number of Appointments that the patient has scheduled for the weekend days
+        - `WeekdayConsults`: Number of Appointments that the patient has scheduled for the weekdays
+        - `Adults`: Number of adults registered for the appointment
+        - `Children`: Number of children registered for the appointment
+        - `Babies`: Number of babies registered for the appointment
+        - `AffiliatedPatient`: Boolean feature worth 1 in case the patient is affiliate to the clinic (has already made appointments)
+        - `PreviousAppointments`: Number of previous appointments that customer has scheduled
+        - `PreviousNoShows`: Number of previous appointments that the patient has booked and then missed
+        - `LastMinutesLate`: Number of minutes that the patient arrived late for the appointment
+        - `NoInsurance`: Boolean feature worth 1 in case the patient has insurance
+        - `ExtraExamsPerConsult`: Number of extra exams that the appointment required
+        - `CountryofOriginHDI`: Human-Development-Index (HDI) for the country of origin of the patient
