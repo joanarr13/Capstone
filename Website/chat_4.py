@@ -41,7 +41,7 @@ def app():
                 selected_prompt_dict = next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)
 
                 # Use st.session_state to store and update the system_behavior variable
-                st.session_state.system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict.get("prompt", ""))
+                st.session_state.system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict.get("description", ""))
 
                 # Add a button to trigger the update
                 if st.button("Click here to update system"):

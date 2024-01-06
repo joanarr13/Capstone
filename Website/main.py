@@ -24,11 +24,11 @@ class MultiApp:
                 menu_icon='check-circle-fill',
                 default_index=1,
                 styles={
-                    "container": {"padding": "5!important","background-color":'black'},
-                    "icon": {"color": "white", "font-size": "23px"}, 
-                    "nav-link": {"color":"white","font-size": "20px", "text-align": "left", "margin":"0px", "--hover-color": "blue"},
+                    "icon": {"font-size": "23px"}, 
+                    "nav-link": {"font-size": "20px", "text-align": "left", "margin":"0px", "--hover-color": "blue"},
                     "nav-link-selected": {"background-color": "#02ab21"}}
                 )
+
 
         for app_info in self.apps:
             if app == app_info["title"]:
