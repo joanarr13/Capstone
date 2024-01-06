@@ -100,3 +100,43 @@ For the chabot:
 
 
 - HDI is an additional dataset which contains the values of HDI for each country in the world and whose values were then mapped to the `no_show`dataset.
+
+Additionally, for the chatbot to be able to answer patient's questions about medication, our team collected 36 different patient information leaflets from Infomed (https://extranet.infarmed.pt/INFOMED-fo/) and then joined them in a single PDF.
+This PDF was then fed into the model of the chatbot so that it could access the information in this file and collect the needed information to provide an answer to the patient.
+The following medicine were included in the pdf:
+        - facetilcisteina 600.pdf		
+        - acidovir_ 200.pdf		
+        - alfa-amilase 3000.pdf		
+        - amox acclv_875_125.pdf		
+        - amoxicilina_ 1000.pdf		
+        - atorvastatina.pdf		
+        - bilastina_20.pdf		
+        - butilescopolamina_10.pdf		
+        - carbocisteina 5.pdf		
+        - cetirizina_10.pdf		
+        - caritromicina_500.pdf		
+        - clindamicina_150.pdf		
+        - clopidrogel.pdf
+        - deflazacorte_6_30.pdf
+        - Diazepam 5_10.pdf
+        - diclofenac 50.pdf
+        - escitalopram_10_20.pdf
+        - esomeprazol_20_40.pdf
+        - etodolac 300.pdf
+        - etonogestrel.pdf
+        - fosfomicina_3000.pdf
+        - furosemida_40.pdf
+        - ibuprofeno_600.pdf
+        - levotiroxina_25.pdf	
+        - metamizol 575.pdf	
+        - metformina_varios.pdf	
+        - metronidazol_250.pdf	
+        - miconazol_20.pdf	
+        - midazolam_15.pdf	
+        - nimesulida_100.pdf	
+        - omeprazol_10.pdf
+        - paracetamol_1000.pdf
+        - paracetamol_codeina_500_30.pdf
+        - paracetamol_tiocolquicosido_500_2.pdf	
+        - sinvastatina_varios.pd
+        - varfarina_5.pdf
