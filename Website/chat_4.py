@@ -31,19 +31,33 @@ def app():
             """
             Initialize the app
             """
+          
+        
             with st.expander("Bot Configuration"):
-                selected_prompt = st.selectbox(label="Prompt", options=[prompt['name'] for prompt in prompts])
-                selected_prompt_dict = next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)
-                system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict["prompt"])
+                # Retrieves the selected prompt from st.session_state (if it exists) or use the first prompt as a default
+                selected_prompt = st.session_state.get("selected_prompt", prompts[0]['name'])
+                selected_prompt = st.selectbox(label="Prompt", options=[prompt['name'] for prompt in prompts], index=prompts.index(next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)))
 
+                selected_prompt_dict = next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)
+
+                # Use st.session_state to store and update the system_behavior variable
+                st.session_state.system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict.get("prompt", ""))
+
+                # Add a button to trigger the update
+                if st.button("Click here to update system"):
+                    st.session_state.chatbot = ChatBot(st.session_state.system_behavior, functions)
+            
+            # Store the selected prompt in st.session_state for persistence across pages
+            st.session_state.selected_prompt = selected_prompt
+            
             st.sidebar.title("🤖 🥼")
 
-            if "chatbot" not in st.session_state:
-                st.session_state.chatbot = ChatBot(system_behavior, functions)
+            # Check if the chatbot is not in the session state or if the button was pressed
+            if "chatbot" not in st.session_state or st.button("Restart ChatBot"):
+                st.session_state.chatbot = ChatBot(st.session_state.system_behavior, functions)
 
             with st.sidebar:
                 st.markdown(f"ChatBot in use: <font color='cyan'>{st.session_state.chatbot.__str__()}</font>", unsafe_allow_html=True)
-
 
         # ------------- Display History Message -------------
 
@@ -485,7 +499,7 @@ def app():
                                     ]
                                 }
                             }
-                            service.events().delete(calendarId='primary', eventId=id).execute()
+                            service.events().delete(calendarId='primary', eventId=original_id).execute()
                             db.collection('Appointments').document(original_id).delete()
                             ev = service.events().insert(calendarId='primary', body=event).execute()
                             new_id = ev['id']
@@ -535,22 +549,23 @@ def app():
         if prompt := st.chat_input("Type your request..."):
 
             # ---------------------------- Request & Response ----------------------------
-            #if system == 'medicine':
-            # display_user_msg(message=prompt)
-            # assistant_response = st.session_state.chatbot.generate_response(message=prompt, langchain=True)
-            # display_assistant_msg(message=assistant_response)
+            if st.session_state.selected_prompt == "Clarifying medicine doubts ChatBot":
+                display_user_msg(message=prompt)
+                assistant_response = st.session_state.chatbot.generate_response(message=prompt, is_langchain=True)
+                display_assistant_msg(message=assistant_response)
+            
 
-            # else:
-            display_user_msg(message=prompt)
-            assistant_response = st.session_state.chatbot.generate_response(message=prompt)
-            if assistant_response.content:
-                display_assistant_msg(message=assistant_response.content)
             else:
-                fn_name = assistant_response.tool_calls[0].function.name
-                arguments = assistant_response.tool_calls[0].function.arguments
-                function = locals()[fn_name]
-                result = function(arguments)
-                display_assistant_msg(message=result)
+                display_user_msg(message=prompt)
+                assistant_response = st.session_state.chatbot.generate_response(message=prompt)
+                if assistant_response.content:
+                    display_assistant_msg(message=assistant_response.content)
+                else:
+                    fn_name = assistant_response.tool_calls[0].function.name
+                    arguments = assistant_response.tool_calls[0].function.arguments
+                    function = locals()[fn_name]
+                    result = function(arguments)
+                    display_assistant_msg(message=result)
 
 
         # ----------------------------------- Sidebar -----------------------------------

@@ -8,10 +8,15 @@ from openai import OpenAI
 import langchain.llms 
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationalRetrievalChain, LLMChain
 from langchain.chains.question_answering import load_qa_chain
+from langchain import PromptTemplate
+from langchain.chat_models import ChatOpenAI
 from meds import meds_data
 from util import local_settings
-
+from prompt_list_4 import template
+# from chromadb import Chroma
 
 # OpenAI API ------------------------------------------------------------------------------------------------------------------------------------
 class GPT_Helper:
@@ -19,17 +24,19 @@ class GPT_Helper:
         self.client = OpenAI(api_key=OPENAI_API_KEY)
         self.messages = []
         self.model = model
-
-        #Langchain model
-        # self.embeddings = OpenAIEmbeddings()
-        # self.document_searcher = FAISS.from_texts(meds_data, self.embeddings)
-        # self.chain = load_qa_chain(langchain.llms.OpenAI(), chain_type="stuff")
+        self.system_behavior = system_behavior
       
         if system_behavior:
             self.messages.append({"role": "system", "content": system_behavior})
 
         if functions:
             self.functions = functions
+
+        self.document_searcher = FAISS.from_texts(meds_data, OpenAIEmbeddings())
+        self.condense_question_prompt_template = PromptTemplate.from_template(template)
+        self.qa_prompt = PromptTemplate(template=self.system_behavior, input_variables=["context", "question"])
+        self.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+        self.llm = ChatOpenAI(temperature=0.1)
 
 
     def langchain_process(self, prompt):
@@ -39,11 +46,11 @@ class GPT_Helper:
     
 
     # get completion from the model
-    def get_completion(self, prompt, temperature=0, langchain=False):
+    def get_completion(self, prompt, temperature=0, is_langchain=False):
 
         self.messages.append({"role": "user", "content": prompt})
 
-        if not langchain:
+        if not is_langchain:
             completion = self.client.chat.completions.create(
             model=self.model,
             messages=self.messages,
@@ -56,9 +63,29 @@ class GPT_Helper:
             return completion.choices[0].message
 
         else:
-           langchain_results = self.langchain_process(prompt)
-           self.messages.append({"role": "assistant", "content": langchain_results})
-           return langchain_results
+            question_generator = LLMChain(llm=self.llm, prompt=self.condense_question_prompt_template, memory=self.memory)
+
+            doc_chain = load_qa_chain(self.llm, chain_type="stuff", prompt=self.qa_prompt)
+
+            qa_chain = ConversationalRetrievalChain(
+                retriever= self.document_searcher.as_retriever(search_kwargs={'k': 6}),
+                question_generator=question_generator,
+                combine_docs_chain=doc_chain,
+                memory=self.memory,
+                # verbose=True
+                )
+            
+            # print(qa_chain.run('what is the recomended dosage of paracetamol?'))
+            # print(qa_chain.run('what are its possible side effects?'))
+            # print(qa_chain.combine_docs_chain.memory)
+
+            result = qa_chain({'question': prompt, 'chat_history': self.messages})
+            response = result['answer']
+
+            # langchain_results = self.langchain_process(prompt)
+            self.messages.append({"role": "assistant", "content": response})
+
+            return response
 
 
 
@@ -79,8 +106,8 @@ class ChatBot:
             functions=functions
         )
 
-    def generate_response(self, message: str, langchain=False):
-        return self.engine.get_completion(message, langchain = langchain)
+    def generate_response(self, message: str, is_langchain=False):
+        return self.engine.get_completion(message, is_langchain = is_langchain)
 
     def __str__(self):
         shift = "   "

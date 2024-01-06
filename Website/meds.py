@@ -15,5 +15,4 @@ text_splitter = CharacterTextSplitter(
     chunk_size = 700,
     chunk_overlap = 100
 )
-
 meds_data = text_splitter.split_text(pdf_text)
