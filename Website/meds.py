@@ -2,7 +2,7 @@ import PyPDF2
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 
-pdf_data = PdfReader("C:\\Users\\ritaf\\Documents\\ESTUDOS\\NOVA IMS\\3º Ano\\Capstone Project\\Projeto\\meds.pdf")
+pdf_data = PdfReader("C:\\Users\\ritaf\\Documents\\ESTUDOS\\NOVA IMS\\3º Ano\\Capstone Project\\Projeto\\data\\meds.pdf")
 pdf_text = ""
 
 for i, page in enumerate(pdf_data.pages):
