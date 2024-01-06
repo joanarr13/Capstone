@@ -1,23 +1,28 @@
 import streamlit as st
+from util import local_settings
 
 def app():
-    st.subheader('Welcome Home! :house:')
+    st.image("loguinho.png")
 
+    st.title('Welcome Home! :house:')
 
-    # # Example: Counter without session state
-    # counter = 0
+    st.header('Come meet Dr. ChatBot!')
+    st.caption('Here you can interact with it and ask it your health related questions.')
 
-    # if st.button('Increment Counter'):
-    #     counter += 1
+    st.divider()
+    
+    st.subheader('What can Dr. ChatBot do for you?')
 
-    # st.write('Counter:', counter)
+    st.write(" - 🪪 Schedule or change your appointments", unsafe_allow_html=True)
 
-    if 'counter' not in st.session_state:
-        st.session_state.counter = 0
+    st.write(" - 👨🏽‍⚕️ Ask doubts about your medication", unsafe_allow_html=True)
 
-    if st.button('Increment Counter'):
-        st.session_state.counter += 1
+    st.write(" - 💡 Other questions about your health", unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    st.write('Counter:', st.session_state.counter)
+    st.subheader('To learn more explore our streamlit app and our website!😉')
 
-    st.write(st.session_state.username)
+    st.markdown("<br><br><br><br>", unsafe_allow_html=True)
+
+    st.caption("\nTo access Doc IT right's full website please click [here](https://docitrightcp.wixsite.com/doc-it-right).")

@@ -8,53 +8,53 @@ import pandas as pd
 from firebase_admin import firestore
 import requests
 from time import time, sleep
-from chat_bot_4 import ChatBot
+from chat_bot_4 import DrChatBot
 from util import local_settings, service
 from prompt_list_4 import prompts
 from functions4 import *
 from clinic_info import *
 
 def app():
+    # If user is not logged in
     if 'db' not in st.session_state:
         st.session_state.db = ''
 
     db=firestore.client()
     st.session_state.db=db
-    # st.title('  :violet[DOC-IT-RIGHT]  :sunglasses:')
-    
-    if st.session_state.username=='':
 
+    if st.session_state.username=='':
         st.text('Login to be able to use the chat!!')
 
+    # If user is logged in
     else:
         def initialize() -> None:
             """
             Initialize the app
             """
-          
-        
+
+            # Select the chatbot's behavior
             with st.expander("Bot Configuration"):
-                # Retrieves the selected prompt from st.session_state (if it exists) or use the first prompt as a default
+                # Retrieves the selected prompt from st.session_state if it exists. Uses the first prompt as a default.
                 selected_prompt = st.session_state.get("selected_prompt", prompts[0]['name'])
                 selected_prompt = st.selectbox(label="Prompt", options=[prompt['name'] for prompt in prompts], index=prompts.index(next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)))
 
                 selected_prompt_dict = next((prompt for prompt in prompts if prompt['name'] == selected_prompt), None)
 
                 # Use st.session_state to store and update the system_behavior variable
-                st.session_state.system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict.get("prompt", ""))
+                st.session_state.system_behavior = st.text_area(label="Prompt", value=selected_prompt_dict.get("description", ""))
 
                 # Add a button to trigger the update
                 if st.button("Click here to update system"):
-                    st.session_state.chatbot = ChatBot(st.session_state.system_behavior, functions)
+                    st.session_state.chatbot = DrChatBot(st.session_state.system_behavior, functions)
             
             # Store the selected prompt in st.session_state for persistence across pages
             st.session_state.selected_prompt = selected_prompt
             
-            st.sidebar.title("🤖 🥼")
+            # st.sidebar.title("🤖 🥼")
 
             # Check if the chatbot is not in the session state or if the button was pressed
             if "chatbot" not in st.session_state or st.button("Restart ChatBot"):
-                st.session_state.chatbot = ChatBot(st.session_state.system_behavior, functions)
+                st.session_state.chatbot = DrChatBot(st.session_state.system_behavior, functions)
 
             with st.sidebar:
                 st.markdown(f"ChatBot in use: <font color='cyan'>{st.session_state.chatbot.__str__()}</font>", unsafe_allow_html=True)
@@ -107,7 +107,7 @@ def app():
                     st.markdown(message)
 
 
-        #-----------GLOBAL FUNCTIONS----------
+        #-----------GLOBAL SCHEDUEING BOT FUNCTIONS----------
         def appointment_checking(start_date_time=None, end_date_time=None, timezone=None):
             try:
                 # Chech if given date is in the past
@@ -569,11 +569,11 @@ def app():
 
 
         # ----------------------------------- Sidebar -----------------------------------
-        with st.sidebar:
-            with st.expander("Information"):
-                if local_settings.OPENAI_API_KEY:
-                    st.write(f"🔑 Key loaded: {local_settings.OPENAI_API_KEY[0:6]}...")
+        # with st.sidebar:
+        #     with st.expander("Information"):
+        #         if local_settings.OPENAI_API_KEY:
+        #             st.write(f"🔑 Key loaded: {local_settings.OPENAI_API_KEY[0:6]}...")
 
-                st.text("💬 MEMORY")
-                st.write(st.session_state.chatbot.memory)
+        #         st.text("💬 MEMORY")
+        #         st.write(st.session_state.chatbot.memory)
 

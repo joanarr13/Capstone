@@ -36,6 +36,7 @@ except ValueError:
 # Settings --------------------------------------------------------------------------------------------------------------------------------------
 class Settings(BaseSettings):
     OPENAI_API_KEY: str = Field(validation_alias="OPENAI_API_KEY")
+    DATA_PATH: str = Field(validation_alias="DATA_PATH")
 
 
 # Vars & Instances ------------------------------------------------------------------------------------------------------------------------------
