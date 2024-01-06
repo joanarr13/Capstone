@@ -67,9 +67,6 @@ def app():
             affiliation = 1 if affiliation else 0
             confirmation = st.checkbox('I daclare that the information above is correct')
 
-            # FALTA ADICIONAR A DIVISÃO DE DADOS ENTRE CLIENTE E MÉDICO
-
-
             if st.button('Create my account'):
                 if nationality is not None and babies is not None and children is not None and adults is not None and confirmation:
                     user = auth.create_user(email = email, password = password, uid=username)
@@ -80,7 +77,6 @@ def app():
                     db=firestore.client()
                     st.session_state.db=db
 
-                    # AQUI: METER OS DADOS NO FIREBASE
                     data={'Username':username,
                           'FirstName': firstname,
                           'LastName': lastname,
@@ -111,11 +107,6 @@ def app():
             
             
     if st.session_state.signout:
-        st.text('Name '+st.session_state.username)
-        st.text('Email id: '+st.session_state.useremail)
-        st.button('Sign out', on_click=t) 
-            
-                
-                            
-    # def ap():
-    #     st.write('Posts')
+        st.text('Name: ' + st.session_state.username)
+        st.text('Email id: ' + st.session_state.useremail)
+        st.button('Sign out', on_click=t)

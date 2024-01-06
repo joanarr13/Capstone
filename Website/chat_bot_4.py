@@ -16,7 +16,6 @@ from langchain.chat_models import ChatOpenAI
 from meds import meds_data
 from util import local_settings
 from prompt_list_4 import template
-# from chromadb import Chroma
 
 # OpenAI API ------------------------------------------------------------------------------------------------------------------------------------
 class GPT_Helper:
@@ -72,12 +71,7 @@ class GPT_Helper:
                 question_generator=question_generator,
                 combine_docs_chain=doc_chain,
                 memory=self.memory,
-                # verbose=True
                 )
-            
-            # print(qa_chain.run('what is the recomended dosage of paracetamol?'))
-            # print(qa_chain.run('what are its possible side effects?'))
-            # print(qa_chain.combine_docs_chain.memory)
 
             result = qa_chain({'question': prompt, 'chat_history': self.messages})
             response = result['answer']
@@ -91,7 +85,7 @@ class GPT_Helper:
 
 # ChatBot ---------------------------------------------------------------------------------------------------------------------------------------
 
-class ChatBot:
+class DrChatBot:
     """
     Generate a response by using LLMs.
     """
@@ -113,7 +107,7 @@ class ChatBot:
         shift = "   "
         class_name = str(type(self)).split('.')[-1].replace("'>", "")
 
-        return f"🤖 {class_name}."
+        return f"🥼🤖 {class_name}."
 
     def reset(self):
         self.engine = GPT_Helper(
