@@ -10,6 +10,7 @@
 3. [How to Use](#proj_use)
 4. [Credits](#credits)
 5. [License](#license)
+6. [References](#ref)
 
 <a name="proj_desc"></a>
 ## Project Description
@@ -28,7 +29,7 @@ This way, and in a country where there is such a great qualified labour but not 
 ### - What main technologies were used in the development of this project?
 For this project, the main goal was to create an AI-powered Question Answer System which would engage with fictional customers - in our case patients of medical clinics. This would be the primary communication channel of our business - being able to offer services to customers (answering patient's medical specialities, as well as their medication doubts; giving the predictions of which appointments are more likely to be missed to clinics) through a conversational app. 
 
-With this project, we were able to explore more in-depth how to make use of LLM models in different problems, as well as we learned how to create ... (FALTAM AQUI COISAS)
+With this project, we were able to explore more in-depth how to make use of LLM models in different problems - the development of a chatbot that is able to perform appointment scheduling actions and solve patient doubts - as well as we learned how to create an application using streamlit.
 
 Overall, in the process of development of our project, we used LLM's from OpenAI, Python was the chosen programming language. Additionally, our chatbot was applied, and further on deployed, on a streamlit app. Finally, the company's website was done using WIX.
 
@@ -60,12 +61,16 @@ FALTA AQUI A DESCRIÇÃO DOS FOLDERS DO CÓDIGO E DAQUELES QUE ELE QUER COM PROM
 - Inês Vieira | 20211589@novaims.unl.pt 
 - Joana Rosa | 20211516@novaims.unl.pt  
 - Rita Centeno | 20211579@novaims.unl.pt
+##
 
 <a name="license"></a>
 ## License
 This project is licensed under the [GNU AGPLv3] - see the [LICENSE.md](LICENSE.md) file for details.
+##
 
+<a name="ref"></a>
 ## References
+Here are some of the most important contents our team checked during the development of the project:
 - OpenAI. (2023). ChatGPT (Jan 7 version) [Large language model](https://chat.openai.com/chat)
 - [Streamlit Components](https://streamlit.io/components?category=widgets)
 - [Additional Streamlit Components](https://docs.streamlit.io/library/api-reference/widgets/st.multiselect)
