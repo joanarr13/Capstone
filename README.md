@@ -60,7 +60,15 @@ FALTA AQUI A DESCRIÇÃO DOS FOLDERS DO CÓDIGO E DAQUELES QUE ELE QUER COM PROM
 - Inês Vieira | 20211589@novaims.unl.pt 
 - Joana Rosa | 20211516@novaims.unl.pt  
 - Rita Centeno | 20211579@novaims.unl.pt
-##
 
 <a name="license"></a>
-## LICENSE (FALTA ESCOLHERMOS ISTO!!!)
+## License
+This project is licensed under the [GNU AGPLv3] - see the [LICENSE.md](LICENSE.md) file for details.
+
+## References
+- OpenAI. (2023). ChatGPT (Jan 7 version) [Large language model](https://chat.openai.com/chat)
+- [Streamlit Components](https://streamlit.io/components?category=widgets)
+- [Additional Streamlit Components](https://docs.streamlit.io/library/api-reference/widgets/st.multiselect)
+- [How to deploy the application](https://docs.streamlit.io/streamlit-community-cloud/deploy-your-app)
+- [Schedule Chatbot Option](https://www.pragnakalp.com/how-to-use-openai-function-calling-to-create-appointment-booking-chatbot/)
+- [Chatbot Langchain Memory](https://stackoverflow.com/questions/76240871/how-do-i-add-memory-to-retrievalqa-from-chain-type-or-how-do-i-add-a-custom-pr)
