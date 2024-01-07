@@ -29,29 +29,45 @@ This way, and in a country where there is such a great qualified labour but not 
 ### - What main technologies were used in the development of this project?
 For this project, the main goal was to create an AI-powered Question Answer System which would engage with fictional customers - in our case patients of medical clinics. This would be the primary communication channel of our business - being able to offer services to customers (answering patient's medical specialities, as well as their medication doubts; giving the predictions of which appointments are more likely to be missed to clinics) through a conversational app. 
 
-With this project, we were able to explore more in-depth how to make use of LLM models in different problems - the development of a chatbot that is able to perform appointment scheduling actions and solve patient doubts - as well as we learned how to create an application using streamlit.
-
-Overall, in the process of development of our project, we used LLM's from OpenAI, Python was the chosen programming language. Additionally, our chatbot was applied, and further on deployed, on a streamlit app. Finally, the company's website was done using WIX.
+With this project, we were able to explore more in-depth how to make use of LLM models, from OpenAI, in different problems (with Python being the chosen programming language) -through the development of a chatbot that is able to perform appointment scheduling actions, solve patient doubts and predict which appointments are more likely to be missed - as well as we learned how to create an applications using streamlit and a website on WIX.
 
 <a name="main_chal"></a>
 ### - What were the main challenges faced? 
-FALTAM AQUI COISAS
+The main challenges faced during the development of this project were related with:
+- Team's limited budget in OpenAi - using and interacting with the chat. Hence, there was a need to become more cautious and restrict some of the parts of the development stage;
+- The chatbot required very specific instructions to ensure the right outputs, which was an extremely time-consuming process (sort of trial and error).
+- There was not enough time to predict and consequently code all the possible human-generated inputs. However, that is something that can be improved with time and user help and reviews.
 
 <a name="rep_desc"></a>
 ## Repository Description
 This repository contains all the files created during the development of our project. In the following paragraphs will be a description of how the repository is organized and what each file contains:
 - [Prompts folder](Prompts): contains all the links that lead to the chats where the prompts were fed into the LLM (in our case, ChatGPT) to obtain - company definition (company name, problem, value proposition, core values, mission, vision, tag line, personas), marketing prompts (discussion of pros and cons of reviews from competitor companies, blog posts creation, pitch script, 5-post social media campaign, Instagram post captions), timetable scheduling prompt and patient data generator prompt.
+- [No Show Prediction](No_show_prediction): this is a folder that contains both a Jupyter notebook containing the development of a predictive model for no-show appointments and the respective data needed for such a task.
+- [Website](Website): this folder contains all the needed files for the chatbot application, on streamlit, to work properly.
+- [Requirements](requirements.txt): file that specifies the dependencies and the versions that need to be installed in the environment for the project to run.
+- [Use Cases](use_cases.pdf): this file contains practical examples of scenarios in which our chatbot appication can be helpful to clients of our company - appointment scheduling, appointment rescheduling, appointment cancellations, clarifying medical doubts, predictive model.
 - [Data Description](data_description.txt): this text file contains the description and the metadata of all the used data in our project.
-- [Git Ignore](.gitignore): this is a file that specifies patterns of files and directories that should be excluded from the version control of our repository.
-- [README](Capstone/README.md): README file
+- [Git Ignore](.gitignore): this file specifies patterns of files and directories that should be excluded from the version control of our repository.
+- [README](README.md): file that contains the basic instructions of how to run the project, the motivations behind it and its features.
+- [LICENSE](LICENSE.md): this is a file that contains the chosen license for this project.
 
-  
-FALTA AQUI A DESCRIÇÃO DOS FOLDERS DO CÓDIGO E DAQUELES QUE ELE QUER COM PROMPTS DO NOSSO MODELO MESMO
-
-
+##
 <a name="proj_use"></a>
-## How To Use the Project. How to Install and Run the Project
-(FALTAM AQUI COISAS)
+## How To Use the Project
+
+
+##
+### How to Install and Run the Project
+
+
+
+
+
+
+
+
+
+
 
 <a name="credits"></a>
 ## 
