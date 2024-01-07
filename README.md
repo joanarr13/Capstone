@@ -43,9 +43,9 @@ The main challenges faced during the development of this project were related wi
 This repository contains all the files created during the development of our project. In the following paragraphs will be a description of how the repository is organized and what each file contains:
 - [Prompts folder](Prompts): contains all the links that lead to the chats where the prompts were fed into the LLM (in our case, ChatGPT) to obtain - company definition (company name, problem, value proposition, core values, mission, vision, tag line, personas), marketing prompts (discussion of pros and cons of reviews from competitor companies, blog posts creation, pitch script, 5-post social media campaign, Instagram post captions), timetable scheduling prompt and patient data generator prompt.
 - [No Show Prediction](No_show_prediction): this is a folder that contains both a Jupyter notebook containing the development of a predictive model for no-show appointments and another Jupyter notebook where the data needed for this task are properly treated.
-- [Website](Website): this folder contains all the needed files for the chatbot application, on streamlit, to work properly.
+- [Website](Website): this folder contains all the needed files for the chatbot application, on Streamlit, to work properly.
 - [Requirements](requirements.txt): file that specifies the dependencies and the versions that need to be installed in the environment for the project to run.
-- [Use Cases](use_cases.pdf): this file contains practical examples of scenarios in which our chatbot appication can be helpful to clients of our company - appointment scheduling, appointment rescheduling, appointment cancellations, clarifying medical doubts, predictive model.
+- [Use Cases](use_cases.pdf): this file contains practical examples of scenarios in which our chatbot application can be helpful to clients of our company - appointment scheduling, appointment rescheduling, appointment cancellations, clarifying medical doubts, and predictive model.
 - [Data Description](data_description.txt): this text file contains the description and the metadata of all the used data in our project.
 - [Git Ignore](.gitignore): this file specifies patterns of files and directories that should be excluded from the version control of our repository.
 - [README](README.md): file that contains the basic instructions of how to run the project, the motivations behind it and its features.
@@ -53,20 +53,15 @@ This repository contains all the files created during the development of our pro
 
 ##
 <a name="proj_use"></a>
-## How To Use the Project
-Divided into two parts: informative website on WIX (https://docitrightcp.wixsite.com/doc-it-right) and the streamlit app (which also has the link for the other website).
+## How To Use the Project. How to Install and Run the Project
+Our project was divided into two main parts: informative website on WIX (https://docitrightcp.wixsite.com/doc-it-right) and the Streamlit app. Hence, the following steps need to be taken to ensure that the chatbot interface can be correctly accessed:
+- Retrieve code from this GitHub Repository (GitClone or Fork)
+- Download the folder, sent by email, with the credentials (credentials to be able to use the Google Calendar platform) and tokens (contains authorization tokens used to authenticate and authorize access when declaring the specified scope)
+- Download the .env file, sent by email (which also contains our API-key - is advisable to change to your own OpenAI API-key). This file should be inside the Capstone folder only.
+- Afterwards, inside the `No-show Prediction` folder - in this GitHub repository, there is a need for changing in both notebooks the path for your own local path to the data.
+- There's also a need to run the requirements.txt file so that the environment is in the same conditions as the development environment was
 
-##
-### How to Install and Run the Project
-
-tirar o código github / clone repository
-descarregar pasta com credenciais (API), dados usados..mudar path no ficheiro .env
-dentro da pasta no-show prediction, there is a need for changing the path in the ...
-dar run nos requirements
-
-to run the project:
-inside the terminal there is a need to open the website folder
-`streamlit run main.py`
+Finally, to run the streamlit app: go inside the terminal, and open the `Website` folder. When that is done, run the following command `streamlit run main.py`.
 
 After this you can have fun interacting with our Dr.Chatbot 🥳.
 
