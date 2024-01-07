@@ -1,16 +1,19 @@
 # Doc-IT-Right - Capstone Project 👨‍⚕️
 #### Fall Semester 2023/2024
 
+##
 ### Table of contents
 
 1. [Project Description](#proj_desc)
-1.1 [Main Technologies Used](#main_tech)
-1.2 [Main Challenges Faced](#main_chal)
+  1.1 [Main Technologies Used](#main_tech)
+  1.2 [Main Challenges Faced](#main_chal)
 2. [Repository Description](#rep_desc)
 3. [How to Use](#proj_use)
+   3.1. [How to Interact with out Chatbot](#chat_int)
 4. [Credits](#credits)
 5. [License](#license)
 6. [References](#ref)
+##
 
 <a name="proj_desc"></a>
 ## Project Description
@@ -19,7 +22,7 @@ Our project comes in the sense of a university course - Capstone Project - on ou
 
 Our fictional company, Doc-IT-Right,  is part of the consultancy sector. However, it falls under the health sector, as it intends to provide a solution for the scheduling and management of appointments in different medical specialties of a medical clinic. 
 
-Our project aims to develop an interface that allows the management of a medical office, including a website with information about the company (https://docitrightcp.wixsite.com/doc-it-right) and also a chatbot that will directly interact with the patient, clarifying all of its doubts. In addition, a predictive model was also developed to predict which appointments were more likely to be missed by patients; therefore, empowering the clinics to better manage their schedules (possibly contacting the patient as a reminder of the appointment or confirming if it is still coming).
+Our project aims to develop an interface that allows the management of a medical office, including a website with information about the company (https://docitrightcp.wixsite.com/doc-it-right) and also a chatbot that will directly interact with the patient, clarifying all of its doubts. In addition, a predictive model was also developed to predict which appointments were more likely to be missed by patients, having a final accuracy of 80% (as well as the same value for the weighted f1-score); therefore, empowering clinics to better manage their schedules (possibly contacting the patient as a reminder of the appointment or confirming if it is still coming).
 
 Our mission is to guarantee that clinics can deliver the best service to their patients, in the most effective way possible. This software will open up the possibility of increasing the quality of medical service with less or equal resources. By effectively organizing data, doctors and other collaborators can dedicate their time to other more complex and important actions, that will benefit patients in a great way, instead of spending time with routine, basic and repetitive actions that can be performed by this software.
 
@@ -39,6 +42,7 @@ The main challenges faced during the development of this project were related wi
 - There was not enough time to predict, and consequently, code all the possible human-generated inputs. However, that is something that can be improved with time and user's help/reviews.
 
 <a name="rep_desc"></a>
+##
 ## Repository Description
 This repository contains all the files created during the development of our project. In the following paragraphs will be a short description of how the repository is organized and what each file contains:
 - [Prompts folder](Prompts): contains all the links that lead to the chats where the prompts were fed into the LLM (in our case, ChatGPT) to obtain - company definition (company name, problem, value proposition, core values, mission, vision, tag line, personas), marketing (discussion of pros and cons of reviews from competitor companies, blog posts creation, pitch script, 5-post social media campaign, Instagram post captions), timetable scheduling and patient data generator prompts.
@@ -57,13 +61,14 @@ This repository contains all the files created during the development of our pro
 ## How To Use the Project. How to Install and Run the Project
 Our project was divided into two main parts: informative website on WIX (https://docitrightcp.wixsite.com/doc-it-right) and the Streamlit app. Hence, the following steps need to be taken to ensure that the chatbot interface can be correctly accessed:
 - Retrieve code from this GitHub Repository (Fork and then Git Clone)
-- Download the folder, sent by email, with the credentials (credentials to be able to use the Google Calendar platform) and tokens (contains authorization tokens used to authenticate and authorize access when declaring the specified scope)
+- Download the folder (data.zip), sent by email, with the credentials (credentials to be able to use the Google Calendar platform) and tokens (contains authorization tokens used to authenticate and authorize access when declaring the specified scope)
 - Download the .env file, sent by email (which also contains our API-key - it is advisable to change to your own OpenAI API-key). This file should be inside the Capstone folder only.
-- Afterwards, inside the `No-show Prediction` folder - in this GitHub repository, there is a need to change in both notebooks the path for your local path to the data.
+- Afterwards, inside the `No-show prediction` folder - in this GitHub repository, there is a need to change in both notebooks the path for your local path to the data.
 - There's also a need to run the requirements.txt file so that the environment is in the same conditions as the development environment was.
 
 Finally, to run the streamlit app: go inside the terminal, and open the `Website` folder. When that is done, run the following command `streamlit run main.py`.
 
+<a name="chat_int"></a>
 ### How to interact with our chatbot
 Our chatbot is capable of handling different formats of inputs. However, in order to obtain the most correct result the following structure of inputs shall be followed (the format presented will be "question that the chatbot will ask" | "your answer format"):
 - Date | YYYY-MM-DD (e.g.: 2024-01-07)
@@ -73,6 +78,8 @@ Our chatbot is capable of handling different formats of inputs. However, in orde
 - Parking Spot | `Yes` or `No` answers only
 - Special Requests | Either `No` or state any special request that you desire (e.g.: "I want a wheelchair")
 - Payment in Advance | Integer Number between 0 and 100
+
+The results of the predictive model for each appointment can be verified in the event scheduled in the clinic's calendar. Furthermore, they are also stored at Doc-IT-Right's database (along with the patient's personal information and the remaining appointment data).
 
 Afterwards, you can have fun interacting with our Dr. Chatbot 🥳.
 
