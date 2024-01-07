@@ -70,9 +70,9 @@ def app():
 
             insurance = st.toggle('Do you have health insurance?')
             noinsurance = 1 if not insurance else 0
-            affiliation = st.toggle("Do you want the clinc's card for future benefits?")
+            affiliation = st.toggle("Do you want the clinic's card for future benefits?")
             affiliation = 1 if affiliation else 0
-            confirmation = st.checkbox('I daclare that the information above is correct')
+            confirmation = st.checkbox('I declare that the information above is correct')
 
             if st.button('Create my account'):
                 if nationality is not None and babies is not None and children is not None and adults is not None and confirmation:
