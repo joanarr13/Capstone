@@ -29,7 +29,7 @@ This way, and in a country where there is such a great qualified labour but not 
 ### - What main technologies were used in the development of this project?
 For this project, the main goal was to create an AI-powered Question Answer System which would engage with fictional customers - in our case patients of medical clinics. This would be the primary communication channel of our business - being able to offer services to customers (answering patient's medical specialities, as well as their medication doubts; giving the predictions of which appointments are more likely to be missed to clinics) through a conversational app. 
 
-With this project, we were able to explore more in-depth how to make use of LLM models, from OpenAI, in different problems (with Python being the chosen programming language) -through the development of a chatbot that is able to perform appointment scheduling actions, solve patient doubts and predict which appointments are more likely to be missed - as well as we learned how to create an applications using streamlit and a website on WIX.
+With this project, we were able to explore more in-depth how to make use of LLM models, from OpenAI, in different problems (with Python being the chosen programming language) -through the development of a chatbot that is able to perform appointment scheduling actions, solve patient doubts and predict which appointments are more likely to be missed - as well as we learned how to create an application using streamlit and a website on WIX.
 
 <a name="main_chal"></a>
 ### - What were the main challenges faced? 
@@ -44,6 +44,7 @@ This repository contains all the files created during the development of our pro
 - [Prompts folder](Prompts): contains all the links that lead to the chats where the prompts were fed into the LLM (in our case, ChatGPT) to obtain - company definition (company name, problem, value proposition, core values, mission, vision, tag line, personas), marketing prompts (discussion of pros and cons of reviews from competitor companies, blog posts creation, pitch script, 5-post social media campaign, Instagram post captions), timetable scheduling prompt and patient data generator prompt.
 - [No Show Prediction](No_show_prediction): this is a folder that contains both a Jupyter notebook containing the development of a predictive model for no-show appointments and another Jupyter notebook where the data needed for this task are properly treated.
 - [Website](Website): this folder contains all the needed files for the chatbot application, on Streamlit, to work properly.
+  -[Prompt Template](Website/prompt_list_4.py):  this folder contains the template prompts fed into the model.   
 - [Requirements](requirements.txt): file that specifies the dependencies and the versions that need to be installed in the environment for the project to run.
 - [Use Cases](use_cases.pdf): this file contains practical examples of scenarios in which our chatbot application can be helpful to clients of our company - appointment scheduling, appointment rescheduling, appointment cancellations, clarifying medical doubts, and predictive model.
 - [Data Description](data_description.txt): this text file contains the description and the metadata of all the used data in our project.
