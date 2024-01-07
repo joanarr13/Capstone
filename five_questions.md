@@ -1,22 +1,12 @@
-﻿<a name="br1"></a> 
+# Question-Answer Examples
+## PDF Retrieval
 
-Question-Answer Examples
+In this document, we enumerate example scenarios or situations for which our application has been designed to provide solutions about patient’s medicine doubts. Additionally, we have also mentioned the page and the screenshot where the information appears in the pdf.
 
-PDF Retrieval
+- Chatbot Conversation
+<img width="420" alt="Captura de ecrã 2024-01-07 115900" src="https://github.com/Rita-Centeno/Capstone/assets/146432437/447ce664-5a72-4458-b2ba-e4985e855436">
 
-In this document, we enumerate example scenarios or situations for which our application has
-
-been designed to provide solutions about patient’s medicine doubts. Additionally, we have also
-
-mentioned the page and the screenshot where the information appears in the pdf.
-
-\-
-
-Chatbot Conversation
-
-\-
-
-PDF Information (page 19 of *meds.pdf)*
+- PDF Information (page 19 of *meds.pdf)*
 
 1
 
