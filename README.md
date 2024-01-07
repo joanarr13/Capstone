@@ -42,7 +42,7 @@ The main challenges faced during the development of this project were related wi
 ## Repository Description
 This repository contains all the files created during the development of our project. In the following paragraphs will be a description of how the repository is organized and what each file contains:
 - [Prompts folder](Prompts): contains all the links that lead to the chats where the prompts were fed into the LLM (in our case, ChatGPT) to obtain - company definition (company name, problem, value proposition, core values, mission, vision, tag line, personas), marketing prompts (discussion of pros and cons of reviews from competitor companies, blog posts creation, pitch script, 5-post social media campaign, Instagram post captions), timetable scheduling prompt and patient data generator prompt.
-- [No Show Prediction](No_show_prediction): this is a folder that contains both a Jupyter notebook containing the development of a predictive model for no-show appointments and the respective data needed for such a task.
+- [No Show Prediction](No_show_prediction): this is a folder that contains both a Jupyter notebook containing the development of a predictive model for no-show appointments and another Jupyter notebook where the data needed for this task are properly treated.
 - [Website](Website): this folder contains all the needed files for the chatbot application, on streamlit, to work properly.
 - [Requirements](requirements.txt): file that specifies the dependencies and the versions that need to be installed in the environment for the project to run.
 - [Use Cases](use_cases.pdf): this file contains practical examples of scenarios in which our chatbot appication can be helpful to clients of our company - appointment scheduling, appointment rescheduling, appointment cancellations, clarifying medical doubts, predictive model.
@@ -54,20 +54,21 @@ This repository contains all the files created during the development of our pro
 ##
 <a name="proj_use"></a>
 ## How To Use the Project
-
+Divided into two parts: informative website on WIX (https://docitrightcp.wixsite.com/doc-it-right) and the streamlit app (which also has the link for the other website).
 
 ##
 ### How to Install and Run the Project
 
+tirar o código github / clone repository
+descarregar pasta com credenciais (API), dados usados..mudar path no ficheiro .env
+dentro da pasta no-show prediction, there is a need for changing the path in the ...
+dar run nos requirements
 
+to run the project:
+inside the terminal there is a need to open the website folder
+`streamlit run main.py`
 
-
-
-
-
-
-
-
+After this you can have fun interacting with our Dr.Chatbot 🥳.
 
 <a name="credits"></a>
 ## 
