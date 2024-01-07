@@ -3,9 +3,9 @@
 ChatBot classes
 """
 
-import random
+# import random
 from openai import OpenAI
-import langchain.llms 
+# import langchain.llms 
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.memory import ConversationBufferMemory
@@ -13,9 +13,9 @@ from langchain.chains import ConversationalRetrievalChain, LLMChain
 from langchain.chains.question_answering import load_qa_chain
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
-from meds import meds_data
+from info_files.meds import meds_data
 from util import local_settings
-from prompt_list_4 import template
+from info_files.prompt_list import template
 
 # OpenAI API ------------------------------------------------------------------------------------------------------------------------------------
 class GPT_Helper:
@@ -38,17 +38,12 @@ class GPT_Helper:
         self.llm = ChatOpenAI(temperature=0.1)
 
 
-    def langchain_process(self, prompt):
-        docs = self.document_searcher.similarity_search(prompt)
-        result = self.chain.run(input_documents=docs, question=prompt)
-        return result
-    
-
     # get completion from the model
     def get_completion(self, prompt, temperature=0, is_langchain=False):
 
         self.messages.append({"role": "user", "content": prompt})
 
+        # Get completion from the model
         if not is_langchain:
             completion = self.client.chat.completions.create(
             model=self.model,
@@ -61,6 +56,7 @@ class GPT_Helper:
 
             return completion.choices[0].message
 
+        # Get completion from the langchain
         else:
             question_generator = LLMChain(llm=self.llm, prompt=self.condense_question_prompt_template, memory=self.memory)
 
@@ -76,7 +72,6 @@ class GPT_Helper:
             result = qa_chain({'question': prompt, 'chat_history': self.messages})
             response = result['answer']
 
-            # langchain_results = self.langchain_process(prompt)
             self.messages.append({"role": "assistant", "content": response})
 
             return response

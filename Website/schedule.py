@@ -1,20 +1,13 @@
 import streamlit as st
-from firebase_admin import firestore
-from clinic_info import limit1, limit2, limit3, doctor_time_tables
+from info_files.clinic_info import limit1, limit2, limit3, doctor_time_tables
 
 def app():
-    if 'db' not in st.session_state:
-        st.session_state.db = ''
 
-    db=firestore.client()
-    st.session_state.db=db
-    
+    # Ask users to log in
     if st.session_state.username=='':
-
         st.text('Login to be able to use the chat!!')
 
     else:
-
         st.header("Doc-IT-Right Schedules⏱️")
 
         bordered_text = f"""
@@ -46,12 +39,14 @@ def app():
         st.subheader("🩺Doctors and their schedules:")
         st.write("")  
 
+        # Choose the weekday to display the doctors available on that day
         options = st.multiselect(
             'Choose your preferable day:',
             ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
             default=['Monday']
         )
 
+        # Display the doctors available on the chosen day and its working hours
         for i in range(0, len(options), 2):
             col1, col2 = st.columns(2)
 

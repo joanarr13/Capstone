@@ -3,7 +3,7 @@ import streamlit as st
 def app():
     st.subheader("🥼 About Doc-IT-Right app")
 
-    st.markdown("This streamlit app is a user-friendly interface designed by <a href=mailto:20211529@novaims.unl.pt> Bruna Faria</a>, <a href=mailto:20211616@novaims.unl.pt> Catarina Oliveira</a>, <a href=mailto:20211589@novaims.unl.pt> Inês Vieira</a>, <a href=mailto:20211516@novaims.unl.pt> Joana Rosa</a>, <a href=mailto:20211579@novaims.unl.pt> Rita Centeno</a>.", unsafe_allow_html=True)
+    st.markdown("This streamlit app is a user-friendly interface designed by [Bruna Faria](https://www.linkedin.com/in/brunafdfaria/), [Catarina Oliveira](https://www.linkedin.com/in/cjoliveira96/), [Inês Vieira](https://www.linkedin.com/in/inesarvieira/), [Joana Rosa](https://www.linkedin.com/in/joanarrosa/), [Rita Centeno](https://www.linkedin.com/in/rita-centeno/).", unsafe_allow_html=True)
 
     st.markdown("""
     ### 📱 App Description
@@ -11,10 +11,10 @@ def app():
     Doc-IT-Right: Your one-stop healthcare solution! Effortlessly manage consults, receive friendly reminders via email, and get quick answers to medical queries. Your health, simplified! 🩺"
     ### 🛠️ Features
 
-    - **Managing Consults 🤝**: Doc-IT-Right Chatbot includes features that can help you with managing your consults. You can book, reschedule, ansd cancel consults!
-    - **Friendly Reminders 📬**: The Doc-IT-Right Chatbot will remind you of your consults via email. You will never forget your scheduled appointments again!
-    - **Medical Doubts 🧐**: With Doc-IT-Right Chatbot you will be able to calrify your medical doubts. You can ask about dosage, side effects and much more!
-    - **FALAR DOS SCHEDULES 📆**: NÃO SEI BEM O QUE VAI SER AQUI.
+    - **Managing Consults 🤝**: Doc-IT-Right Chatbot includes features that can help you with managing your consults. You can book, reschedule, and cancel consults!
+    - **Friendly Reminders 📬**: The Doc-IT-Right Chatbot works with Google Calendar and will remind you of your consults via email. You will never forget your scheduled appointments again!
+    - **Medical Doubts 🧐**: With Doc-IT-Right Chatbot you will be able to clarify your medical doubts. You can ask about dosage, side effects and much more!
+    - **Schedule Information 📆**: In the schedules page you will be able to plan the perfect time for your consults.
 
     ### 👨‍💻 Usage
 
@@ -34,6 +34,7 @@ def app():
 
     ### ⭐ Follow Doc-IT-Right
     
-    Follow the development of this app from github through this [project repository](https://github.com/Rita-Centeno/Capstone)
+    Follow the development of this app from github through our [project repository](https://github.com/Rita-Centeno/Capstone). 
+    You can also follow our journey through our [instagram](https://bit.ly/41IG0Gy) or our [website](https://docitrightcp.wixsite.com/doc-it-right).
     """)
 

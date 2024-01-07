@@ -70,7 +70,7 @@ functions = [
                     },
                     "doctor": {
                         "type" : "string",
-                        "description": "doctor of preference for the new appointment. Make sure to only ask this once the original appointment has been indeed canceled"
+                        "description": "doctor of preference for the new appointment."
                     },
                     "book_date": {
                         "type": "string",
@@ -131,8 +131,9 @@ functions = [
     }]
 
 
-
-model = joblib.load('noshow_model.joblib')
-scaler = joblib.load('robust_scaler.joblib')
+# Load the model and scaler for predictions
+model = joblib.load('for_predictions/noshow_model.joblib')
+scaler = joblib.load('for_predictions/robust_scaler.joblib')
+# Define the features used for predictions
 features_scaler = ['AppointmentMonth', 'AppointmentWeekNumber', 'AppointmentDayOfMonth', 'AppointmentHour', 'WeekendConsults', 'WeekdayConsults', 'Adults', 'Children', 'Babies', 'FirstTimePatient', 'AffiliatedPatient', 'PreviousAppointments', 'PreviousConsults', 'PreviousNoShows', 'LastMinutesLate', 'OnlineBooking', 'AppointmentChanges', 'BookingToConsultDays', 'ParkingSpaceBooked', 'SpecialRequests', 'NoInsurance', 'ExtraExamsPerConsult', 'DoctorRequested', 'DoctorAssigned', 'ConsultPriceEuros', 'ConsultPriceUSD', '%PaidinAdvance', 'CountryofOriginAvgIncomeEuros (Year-2)', 'CountryofOriginAvgIncomeEuros (Year-1)', 'CountryofOriginHDI (Year-1)']
 feature_names = ['AppointmentWeekNumber', 'AppointmentDayOfMonth', 'AppointmentHour', 'WeekendConsults', 'WeekdayConsults', 'Adults', 'Children', 'Babies', 'AffiliatedPatient', 'PreviousAppointments', 'PreviousNoShows', 'LastMinutesLate', 'OnlineBooking', 'AppointmentChanges', 'BookingToConsultDays', 'ParkingSpaceBooked', 'SpecialRequests', 'NoInsurance', 'ExtraExamsPerConsult', 'DoctorAssigned', 'ConsultPriceEuros', '%PaidinAdvance', 'CountryofOriginHDI (Year-1)']
