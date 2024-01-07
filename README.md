@@ -63,8 +63,8 @@ This repository contains all the files created during the development of our pro
 Our project was divided into two main parts: informative website on WIX (https://docitrightcp.wixsite.com/doc-it-right) and the Streamlit app. Hence, the following steps need to be taken to ensure that the chatbot interface can be correctly accessed:
 - Retrieve code from this GitHub Repository (`Fork` and then `Git Clone`)
 - Download the folder (data.zip), sent by email, with the credentials (credentials to be able to use the Google Calendar platform) and tokens (contains authorization tokens used to authenticate and authorize access when declaring the specified scope). Please unzip this folder before moving on to the next step.
-- Download the .env file (should be stored inside of the Capstone folder only), sent by email (which also contains our `API-key` - it is advisable to change to your own OpenAI API-key; the `DATA_PATH` should also be substituted to the local path of the data folder you just downloaded from the email).
-- Afterwards, inside the `No-show prediction` folder - in this GitHub repository, there is a need to change in both notebooks the path for your local path to the data.
+- Download the .env file (should be stored inside of the Capstone folder only), sent by email (which also contains our `API-key` - it is advisable to change to your own OpenAI API-key; the `DATA_PATH` should also be substituted to the local path of the data folder you just downloaded from the email. Please note that the end of the path should be `//`).
+- Afterwards, inside the `No-show prediction` folder - in this GitHub repository, there is a need to change in both notebooks the path for your local path to the data (Please note that the end of the path should be `//`).
 - There's also a need to run the requirements.txt file so that the environment is in the same conditions as the development environment was.
 
 Finally, to run the Streamlit app: go inside the terminal, and open the [`Website`](Website) folder  (which is inside the capstone folder/repository). When that is done, run the following command `streamlit run main.py`.
