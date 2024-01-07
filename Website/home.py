@@ -1,8 +1,7 @@
 import streamlit as st
-from util import local_settings
 
 def app():
-    st.image("loguinho.png")
+    st.image("images/logo.png")
 
     st.title('Welcome Home! :house:')
 

@@ -1,5 +1,5 @@
 import streamlit as st
-from countries import hdi_dict
+from info_files.countries import hdi_dict
 from firebase_admin import firestore, auth
 
 
@@ -11,7 +11,10 @@ def app():
     if 'useremail' not in st.session_state:
         st.session_state.useremail = ''
 
-    def f():
+    def try_login():
+        """
+        Authenticate the user
+        """
         try:
             user = auth.get_user_by_email(email)
             st.session_state.username = user.uid
@@ -23,7 +26,10 @@ def app():
         except: 
             st.warning('Login Failed')
 
-    def t():
+    def reset():
+        """
+        Reset the username and email when the user signs out
+        """
         st.session_state.signout = False
         st.session_state.signedout = False   
         st.session_state.username = ''
@@ -44,6 +50,7 @@ def app():
         
 
         if choice == 'Sign up':
+            # Retreive the necessary user information for sign up
             username = st.text_input("Enter your unique username")
 
             st.divider()
@@ -71,12 +78,14 @@ def app():
                 if nationality is not None and babies is not None and children is not None and adults is not None and confirmation:
                     user = auth.create_user(email = email, password = password, uid=username)
                     
+                    # Initialize the database
                     if 'db' not in st.session_state:
                         st.session_state.db = ''
 
                     db=firestore.client()
                     st.session_state.db=db
 
+                    # Create the user's document
                     data={'Username':username,
                           'FirstName': firstname,
                           'LastName': lastname,
@@ -103,10 +112,10 @@ def app():
                 else:
                     st.warning('Please fill all the fields and confirm the information')
         else:
-            st.button('Login', on_click=f)
+            st.button('Login', on_click=try_login)
             
             
     if st.session_state.signout:
         st.text('Name: ' + st.session_state.username)
         st.text('Email id: ' + st.session_state.useremail)
-        st.button('Sign out', on_click=t)
+        st.button('Sign out', on_click=reset)

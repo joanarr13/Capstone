@@ -8,29 +8,12 @@ Classes:
 - `Settings`: A class for managing settings using Pydantic's BaseSettings.
 - `GPT_Wrapper`: A class for interfacing with OpenAI's GPT models.
 """
-import os
 from dotenv import find_dotenv, load_dotenv
 from pydantic_settings import BaseSettings
 from pydantic import Field
-from openai import OpenAI
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 import firebase_admin
-
-# Google Calendar API ------------------------------------------------------------------------------------------------------------------------------------
-SCOPES = ['https://www.googleapis.com/auth/calendar']
-creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-service = build('calendar', 'v3', credentials=creds)
-
-# Firebase API ------------------------------------------------------------------------------------------------------------------------------------
-
-cred = firebase_admin.credentials.Certificate("doc-it-right-c4b0c-a8097b4fd708.json")
-try:
-    firebase_admin.get_app()
-    # print("Firebase app is already initialized.")
-except ValueError:
-    # Initialize the app if it hasn't been initialized yet
-    firebase_admin.initialize_app(cred)
 
 
 # Settings --------------------------------------------------------------------------------------------------------------------------------------
@@ -57,6 +40,24 @@ _ = load_dotenv(find_dotenv())
 if not _:
     _ = load_dotenv(".env")
 
-# print(os.getenv("OPENAI_API_KEY")[0:-15])
-
 local_settings = Settings()
+
+
+# Google Calendar API ------------------------------------------------------------------------------------------------------------------------------------
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+creds = Credentials.from_authorized_user_file(local_settings.DATA_PATH+'token.json', SCOPES)
+service = build('calendar', 'v3', credentials=creds)
+
+
+# Firebase API ------------------------------------------------------------------------------------------------------------------------------------
+
+cred = firebase_admin.credentials.Certificate(local_settings.DATA_PATH+"doc-it-right-c4b0c-a8097b4fd708.json")
+
+try:
+    firebase_admin.get_app()
+
+except ValueError:
+    # Initialize the app if it hasn't been initialized yet
+    firebase_admin.initialize_app(cred)
+
+
