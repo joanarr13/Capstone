@@ -9,7 +9,7 @@
   1.2 [Main Challenges Faced](#main_chal)
 2. [Repository Description](#rep_desc)
 3. [How to Use](#proj_use)
-   3.1. [How to Interact with out Chatbot](#chat_int)
+   3.1. [How to Interact with our Chatbot](#chat_int)
 4. [Credits](#credits)
 5. [License](#license)
 6. [References](#ref)
