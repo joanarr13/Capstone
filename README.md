@@ -87,11 +87,12 @@ Afterwards, you can have fun interacting with our Dr. Chatbot 🥳.
 <a name="credits"></a>
 ## 
 #### Project Developed by:
-- Bruna Faria | 20211529@novaims.unl.pt  
-- Catarina Oliveira | 20211616@novaims.unl.pt  
-- Inês Vieira | 20211589@novaims.unl.pt 
-- Joana Rosa | 20211516@novaims.unl.pt  
-- Rita Centeno | 20211579@novaims.unl.pt
+- Bruna Faria | [LinkedIn](https://www.linkedin.com/in/brunafdfaria/)
+- Catarina Oliveira | [LinkedIn](https://www.linkedin.com/in/cjoliveira96/)
+- Inês Vieira | [LinkedIn](https://www.linkedin.com/in/inesarvieira/)
+- Joana Rosa | [LinkedIn](https://www.linkedin.com/in/joanarrosa/) 
+- Rita Centeno | [LinkedIn](https://www.linkedin.com/in/rita-centeno/)
+##
 ##
 
 <a name="license"></a>
